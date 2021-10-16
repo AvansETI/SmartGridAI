@@ -1,0 +1,14 @@
+# pip install -r requirements-cpu.txt
+
+#base
+keras
+tensorflow
+scikit-learn
+matplotlib
+seaborn
+pandas
+numpy
+influxdb
+
+#logging
+wandb

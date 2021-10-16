@@ -1,0 +1,18 @@
+# pip install -r requirements-gpu-amd.txt
+
+#base
+keras
+tensorflow
+scikit-learn
+matplotlib
+seaborn
+pandas
+numpy
+influxdb
+
+#logging
+wandb
+
+#gpu
+plaidml-keras
+plaidbench

@@ -1,0 +1,16 @@
+# pip install -r requirements-gpu-nvidia.txt
+
+#base
+scikit-learn
+matplotlib
+seaborn
+pandas
+numpy
+influxdb
+keras
+
+#logging
+wandb
+
+#gpu
+tensorflow-gpu

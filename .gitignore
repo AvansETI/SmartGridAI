@@ -1,0 +1,7 @@
+Time Serie Prediction/LSTM/data/household_power_consumption.txt
+Time Serie Prediction/LSTM/wandb/
+Time Serie Prediction/LSTM/modelcheckpoint.hdf5
+*.hdf5
+Time Serie Prediction/GRU/data/household_power_consumption.txt
+Time Serie Prediction/GRU/wandb/
+Time Serie Prediction/InfluxDB/.idea/

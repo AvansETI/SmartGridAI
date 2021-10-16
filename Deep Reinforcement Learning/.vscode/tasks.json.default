@@ -1,0 +1,31 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "pip install",
+            "type": "shell",
+            "command": "pip install --user -e .",
+            "problemMatcher": []
+        },
+        {
+            "label": "set git user",
+            "type": "shell",
+            "command": "git config --global user.name \"${input:name}\" && git config --global user.email \"${input:email}\"",
+            "problemMatcher": []
+        },
+    ],
+    "inputs": [
+        {
+            "id": "name",
+            "description": "Git user name",
+            "type": "promptString"
+        },
+        {
+            "id": "email",
+            "description": "Git user email",
+            "type": "promptString"
+        }
+    ]
+}
