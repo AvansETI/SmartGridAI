@@ -5,3 +5,8 @@ Time Serie Prediction/LSTM/modelcheckpoint.hdf5
 Time Serie Prediction/GRU/data/household_power_consumption.txt
 Time Serie Prediction/GRU/wandb/
 Time Serie Prediction/InfluxDB/.idea/
+
+.idea/
+node_modules/
+__pycache__/
+.ipynb_checkpoint/
