@@ -9,4 +9,4 @@ Time Serie Prediction/InfluxDB/.idea/
 .idea/
 node_modules/
 __pycache__/
-.ipynb_checkpoint/
+.ipynb_checkpoints/
