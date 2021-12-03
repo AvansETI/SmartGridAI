@@ -1,6 +1,6 @@
 # ETL Notes
 
-##requirements
+## requirements
 Install the required packages (requirements.txt) \
 The source datasets can be found at https://github.com/IoTsec/Room-Climate-Datasets \
 Download those datasets and put them alongside the notebooks, the file structure should look as follows.
@@ -23,7 +23,7 @@ Do the following or your equivalent and restart your kernel.
 conda install numpy<1.20 
 ````
 
-##Column details
+## Column details
 + original_entry_id: Data is concatinated from multiple days/rooms, these are the original entry id's from those sources.
 + node_id: At what place in the room the data was collected from, [see floor plans section](#floor-plans) 
 + room: Which room was used, [see floor plans section](#floor-plans) 
@@ -48,22 +48,22 @@ conda install numpy<1.20
 + acceptability_80: Acceptability for 80% occupants
 + acceptability_90: Acceptability for 90% occupants
 
-##Note on the comfort data
+## Note on the comfort data
 Comfort data model based on the [ASHRAE 55 standard](https://www.researchgate.net/figure/ASHRAE-55-limits-for-thermal-Comfort-adapted-from-ASHRAE-55-2017_fig5_327597687), which is about the same as [pub 74](https://www.vabi.nl/wp-content/uploads/2016/02/Open-hier-Comforteisen-toetsen-met-gebouwsimulatie.pdf). 
 
-##Acceptability 80% distribution
+## Acceptability 80% distribution
 ![Acceptability 80% distribution](images/acceptability_80.png)
 
-##Acceptability 90% distribution
+## Acceptability 90% distribution
 ![Acceptability 90% distribution](images/acceptability_90.png)
 
-<h2 id="floor-plans">Floor plans dataset</h3>
-###Room A
-![Room A](images/room_a.png)
-###Room B
-![Room B](images/room_b.png)
-###Room C
-![Room C](images/room_c.png)
+<h2 id="floor-plans">Floor plans dataset</h2>
+<h3>Room A</h3>
+<img src="images/room_a.png"/>
+<h3>Room B</h3>
+<img src="images/room_b.png"/>
+<h3>Room C</h3>
+<img src="images/room_c.png"/>
 
-##sources
+## sources
 + study used as datasource: https://github.com/IoTsec/Room-Climate-Datasets
