@@ -1,0 +1,48 @@
+POST http://localhost:5000/predict
+Content-Type: application/json
+
+{
+}
+
+###
+
+POST http://localhost:5000/predict
+Content-Type: application/json
+
+{
+  "temperature":  "21.83",
+  "number_of_occupants":  "2"
+}
+
+###
+
+POST http://localhost:5000/predict
+Content-Type: application/json
+
+{
+  "temperature":  "21.83",
+  "mean_temp_day":  "8.6",
+  "heat_index":  "21.43247952261012",
+  "relative_humidity":  "42.899",
+  "light_sensor_one_wave_length":  "231.43",
+  "light_sensor_two_wave_length":  "823.4",
+  "number_of_occupants":  "2",
+  "activity_of_occupants":  "4",
+  "state_of_door":  "0",
+  "hour":  "15",
+  "minute":  "9",
+  "second":  "12"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
