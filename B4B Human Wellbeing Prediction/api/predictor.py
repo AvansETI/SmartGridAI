@@ -8,5 +8,5 @@ class Predictor:
     def predict_model(self, data):
         return self.model.predict(data)[0]
 
-    def load_model(self, filename='model.sav'):
+    def load_model(self, filename='model.pickle'):
         return joblib.load(filename=filename)

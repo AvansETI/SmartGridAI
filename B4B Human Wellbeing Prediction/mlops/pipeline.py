@@ -15,7 +15,7 @@ def default_file_name():
 
 
 class ProcessData(luigi.Task):
-    file_path = luigi.Parameter(default='dataset.csv')
+    file_path = luigi.Parameter(default='../dataset/dataset.csv')
     output_path = luigi.Parameter(default=f'exported_datasets/{default_file_name()}.csv')
     target_name = luigi.Parameter(default='acceptability_90')
     time = luigi.Parameter(default=time.time())
