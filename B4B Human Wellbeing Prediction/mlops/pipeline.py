@@ -67,7 +67,7 @@ class OptimizeModel(luigi.Task):
         return [ProcessData()]
 
     def run(self):
-        df = pd.read_csv(self.file_path)[:100]
+        df = pd.read_csv(self.file_path)
 
         features = [
             'temperature',
@@ -92,8 +92,7 @@ class OptimizeModel(luigi.Task):
 
         self.set_status_message('Optimizing model')
         pipeline_optimizer = TPOTClassifier(
-            generations=1,
-            population_size=10,
+            generations=5,
             scoring=self.scoring_function,
             n_jobs=-1,
             early_stop=3,
