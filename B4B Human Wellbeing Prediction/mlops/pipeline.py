@@ -17,8 +17,8 @@ def default_file_name():
 
 class CombineData(luigi.Task):
     folder_path = luigi.Parameter(default='../datasets/*.csv')
-    output_path = luigi.Parameter(default=f'combined_datasets/{default_file_name()}.csv')
     time = luigi.Parameter(default=time.time())
+    output_path = f'combined_datasets/{default_file_name()}.csv'
 
     def output(self):
         return luigi.LocalTarget(self.output_path)
@@ -32,9 +32,9 @@ class CombineData(luigi.Task):
 
 
 class ProcessData(luigi.Task):
-    output_path = luigi.Parameter(default=f'processed_datasets/{default_file_name()}.csv')
     target_name = luigi.Parameter(default='acceptability_90')
     time = luigi.Parameter(default=time.time())
+    output_path = f'processed_datasets/{default_file_name()}.csv'
 
     def requires(self):
         return [CombineData()]
@@ -69,11 +69,12 @@ class ProcessData(luigi.Task):
 
 
 class OptimizeModel(luigi.Task):
-    output_path_pipeline = luigi.Parameter(default=f'exported_pipelines/{default_file_name()}.py')
-    output_path_model = luigi.Parameter(default=f'exported_models/{default_file_name()}.pkl')
+    generations = luigi.Parameter(default=10)
     scoring_function = luigi.Parameter(default=None)
     score_threshold = luigi.FloatParameter(default=99)
+    tpot_config = luigi.Parameter(default='TPOT NN')
     time = luigi.Parameter(default=time.time())
+    output_file = f'exported_models/{default_file_name()}.pkl'
 
     def requires(self):
         return [ProcessData()]
@@ -90,11 +91,15 @@ class OptimizeModel(luigi.Task):
 
         self.set_status_message('Optimizing model')
         pipeline_optimizer = TPOTClassifier(
-            generations=5,
+            generations=self.generations,
             scoring=self.scoring_function,
             n_jobs=-1,
+            max_eval_time_mins=10,
+            config_dict=self.tpot_config,
+            periodic_checkpoint_folder=f'tpot_logs/{default_file_name()}',
             early_stop=3,
-            verbosity=3
+            verbosity=3,
+            log_file=f'tpot_logs/{default_file_name()}.txt',
         )
 
         self.set_status_message('Fitting model')
@@ -106,12 +111,12 @@ class OptimizeModel(luigi.Task):
         self.set_status_message(f'Model score: {score}')
 
         if self.score_threshold < (score * 100):
-            pipeline_optimizer.export(self.output_path_pipeline, data_file_path=file_path)
+            pipeline_optimizer.export(f'exported_pipelines/{default_file_name()}.py', data_file_path=file_path)
 
-            with open(self.output_path_model, 'wb') as file:
+            with open(self.output_file, 'wb') as file:
                 cloudpickle.dump(self, file)
 
-            shutil.copy(self.output_path_model, '../api/model.pkl')
+            shutil.copy(self.output_file, '../api/model.pkl')
 
 
 if __name__ == '__main__':
