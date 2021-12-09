@@ -26,7 +26,7 @@ class CombineData(luigi.Task):
     def run(self):
         files = glob.glob(self.folder_path)
 
-        csv = pd.concat([pd.read_csv(file, index_col=[0]) for file in files])
+        csv = pd.concat([pd.read_csv(file) for file in files])
 
         csv.to_csv(self.output_path, index=False)
 
@@ -54,6 +54,7 @@ class ProcessData(luigi.Task):
         df = pd.get_dummies(df, columns=['room'])
 
         drop = [
+            'original_entry_id',
             'node_id',
             'datetime',
             'acceptability_80',
