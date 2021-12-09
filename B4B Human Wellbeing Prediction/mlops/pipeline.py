@@ -12,7 +12,7 @@ from tpot import TPOTClassifier
 
 
 def default_file_name():
-    return datetime.today().strftime('%d-%m-%Y_%H:%M:%S')
+    return datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
 
 
 class CombineData(luigi.Task):
