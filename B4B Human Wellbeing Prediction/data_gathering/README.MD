@@ -29,7 +29,7 @@ nice to haves
 + room(if we use multiple rooms)
 + historical data
 
-#### where would this data come from
+### where would this data come from
 Through our meetings we found out about a living lab(SENDlab) inside of Avans, after another follow-up meeting with Maurice Snoeren we came to the conclusion that the current SENDlab doesnt have our data requirements and here's why.\
 
 + SENDlab isn't historical.
@@ -51,7 +51,7 @@ A qoute from the study.
 differences in thermal sensations and preferences due to their “one size fits all” approach.
 
 Thus we choose to use active feedback.
-#### our approach to active feedback
+### our approach to active feedback
 We started focusing our efforts to getting some kind of active feedback from the people inside the living lab. There are a couple ways to get this data.
 + Create an app where students can leave feedback about their comfort.
 + Use moodboxes that students press when leaving a room, rating the comfort for that class.
@@ -66,7 +66,7 @@ Why we want to use moodboxes.
 1. We specify when and where someone gives feedback(at the end of class when they walk out).
 2. Avans has a past record of using moodboxes so they could already be available to us.
 
-##### getting the moodboxes.
+### getting the moodboxes.
 We then started contacting concerned party at Avans who would know about these buttons. Through this we found out that the moodbox-campaign wasn't done by Avans itself but by a third party.\
 
 To follow up on this discovery we contacted this third party about potentially getting one or more moodboxes from them, we got a reply to our first email that they'd start looking, we haven't gotten any follow up email about this, nor did we get a reply to our follow up email.
@@ -75,7 +75,7 @@ We also discussed the moodbox idea in the stakeholder meeting. There is potentia
 ## Why we dont use b4bux specific dataset
 This basically left us without any real climate data or feedback data which is when we looked at some already existing comfort standards specifcally ([ASHRAE 55 standard](https://www.researchgate.net/figure/ASHRAE-55-limits-for-thermal-Comfort-adapted-from-ASHRAE-55-2017_fig5_327597687) and [publication 74](https://www.vabi.nl/wp-content/uploads/2016/02/Open-hier-Comforteisen-toetsen-met-gebouwsimulatie.pdf).\
 
-### ASHRAE 55 standard
+## ASHRAE 55 standard
 First off all the ASHREA 55 standard can be found [Here](https://ashrae.iwrapper.com/ASHRAE_PREVIEW_ONLY_STANDARDS/STD_55_2020) in case you need more details. For our project specifically we want our focus on page 20 which details the acceptability limits for comfort.\
 
 To calculate our satisfaction limits with the ASHRAE 55 standard we need 3 variables page 20 off the standard, we will go more into detail about this calculation here.
@@ -84,14 +84,14 @@ To calculate our satisfaction limits with the ASHRAE 55 standard we need 3 varia
 + Air temperature.
 + Humidity.
 
-#### Extra note on humidity
+### Extra note on humidity
 Our tutor mentioned that humidity might not be a good factor to determine satisfaction, we would like to refute this by pointing to page 49 off the standard which describes.
 
 >Nonthermal comfort factors, such as skind drying, irritation, dryness of the eyes and static electricity generation may place limits on acceptability in a low humidity environment.
 
 The humidity itself does directly corrolate to satisfaction because of this, the thermal comfort may be perfect but if the humidity gives you dry eyes you wouldn't be comfortable.
 
-#### Calculation
+### Calculation
 To calculate this satisfaction the standard specifies the acceptability limits, if someone falls within this upper and lower limit then they are satisfied.
 
 The limit for 80% comfort is A thermal environment that a substantial majority(more than 80%) of the occupants find thermally acceptable. 
