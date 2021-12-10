@@ -30,7 +30,7 @@ nice to haves
 + historical data
 
 ### where would this data come from
-Through our meetings we found out about a living lab(SENDlab) inside of Avans, after another follow-up meeting with Maurice Snoeren we came to the conclusion that the current SENDlab doesnt have our data requirements and here's why.
+Through our meetings we found out about a living lab(SENDlab) inside of Avans, after another follow-up meeting with Maurice Snoeren we came to the conclusion that the current SENDlab doesnt have satisfy our data requirements.
 
 + SENDlab isn't historical.
 + SENDlab doesn't have any humidity data.
@@ -38,7 +38,7 @@ Through our meetings we found out about a living lab(SENDlab) inside of Avans, a
 The biggest of these is ofcourse the historical data, there isn't enough data in sendlab for a good prediction plus the data isn't consistently retrieved.
 
 At the same time we were looking at the SENDlab we had various contact points with our stakeholders about getting data from one off them.
-After our initial meeting we found out that strukton and Olivia potentially already have a datasource, after sending out more follow-up emails the week after to these stakeholders we've gotten no response.
+After our initial meeting we found out that strukton and Olivia Guerra potentially already have a datasource, after sending out more follow-up emails the week after to these stakeholders we've gotten no response.
 
 Because off this non-communication and the poor quality of SENDlab we decided to mock our dataset and future-proof our project so the next group that will pick it up will only have to exchange our mock dataset for the real one.
 
