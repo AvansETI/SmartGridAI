@@ -10,7 +10,6 @@ Download those datasets and put them alongside the notebooks, the file structure
     + datasets-location_B
     + datasets-location_C
 
-````
 
 ## Column details
 + original_entry_id: Data is concatinated from multiple days/rooms, these are the original entry id's from those sources.
