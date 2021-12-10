@@ -30,20 +30,20 @@ nice to haves
 + historical data
 
 ### where would this data come from
-Through our meetings we found out about a living lab(SENDlab) inside of Avans, after another follow-up meeting with Maurice Snoeren we came to the conclusion that the current SENDlab doesnt have our data requirements and here's why.\
+Through our meetings we found out about a living lab(SENDlab) inside of Avans, after another follow-up meeting with Maurice Snoeren we came to the conclusion that the current SENDlab doesnt have our data requirements and here's why.
 
 + SENDlab isn't historical.
 + SENDlab doesn't have any humidity data.
 
 The biggest of these is ofcourse the historical data, there isn't enough data in sendlab for a good prediction plus the data isn't consistently retrieved.
 
-At the same time we were looking at the SENDlab we had various contact points with our stakeholders about getting data from one off them.\
-After our initial meeting we found out that strukton and Olivia potentially already have a datasource, after sending out more follow-up emails the week after to these stakeholders we've gotten no response.\
+At the same time we were looking at the SENDlab we had various contact points with our stakeholders about getting data from one off them.
+After our initial meeting we found out that strukton and Olivia potentially already have a datasource, after sending out more follow-up emails the week after to these stakeholders we've gotten no response.
 
 Because off this non-communication and the poor quality of SENDlab we decided to mock our dataset and future-proof our project so the next group that will pick it up will only have to exchange our mock dataset for the real one.
 
 ### satisfaction data requirements
-We need to find a way to get our satisfaction data for that we could either choose for active or passive feedback.\
+We need to find a way to get our satisfaction data for that we could either choose for active or passive feedback.
 Early on Erik Kluijtmans found an existing study detailing that passive feedback isn't yet ready to accommodate individual differences in thermal comfort.
 
 A qoute from the study.
@@ -67,16 +67,16 @@ Why we want to use moodboxes.
 2. Avans has a past record of using moodboxes so they could already be available to us.
 
 ### getting the moodboxes.
-We then started contacting concerned party at Avans who would know about these buttons. Through this we found out that the moodbox-campaign wasn't done by Avans itself but by a third party.\
+We then started contacting concerned party at Avans who would know about these buttons. Through this we found out that the moodbox-campaign wasn't done by Avans itself but by a third party.
 
 To follow up on this discovery we contacted this third party about potentially getting one or more moodboxes from them, we got a reply to our first email that they'd start looking, we haven't gotten any follow up email about this, nor did we get a reply to our follow up email.
 
 We also discussed the moodbox idea in the stakeholder meeting. There is potentially a space for us at strukton where we could place said buttons but getting the required compliance from strukton would take too long for our turn-around time.
 ## Why we dont use b4bux specific dataset
-This basically left us without any real climate data or feedback data which is when we looked at some already existing comfort standards specifcally ([ASHRAE 55 standard](https://www.researchgate.net/figure/ASHRAE-55-limits-for-thermal-Comfort-adapted-from-ASHRAE-55-2017_fig5_327597687) and [publication 74](https://www.vabi.nl/wp-content/uploads/2016/02/Open-hier-Comforteisen-toetsen-met-gebouwsimulatie.pdf).\
+This basically left us without any real climate data or feedback data which is when we looked at some already existing comfort standards specifcally ([ASHRAE 55 standard](https://www.researchgate.net/figure/ASHRAE-55-limits-for-thermal-Comfort-adapted-from-ASHRAE-55-2017_fig5_327597687) and [publication 74](https://www.vabi.nl/wp-content/uploads/2016/02/Open-hier-Comforteisen-toetsen-met-gebouwsimulatie.pdf).
 
 ## ASHRAE 55 standard
-First off all the ASHREA 55 standard can be found [Here](https://ashrae.iwrapper.com/ASHRAE_PREVIEW_ONLY_STANDARDS/STD_55_2020) in case you need more details. For our project specifically we want our focus on page 20 which details the acceptability limits for comfort.\
+First off all the ASHREA 55 standard can be found [Here](https://ashrae.iwrapper.com/ASHRAE_PREVIEW_ONLY_STANDARDS/STD_55_2020) in case you need more details. For our project specifically we want our focus on page 20 which details the acceptability limits for comfort.
 
 To calculate our satisfaction limits with the ASHRAE 55 standard we need 3 variables page 20 off the standard, we will go more into detail about this calculation here.
 
@@ -96,7 +96,8 @@ To calculate this satisfaction the standard specifies the acceptability limits, 
 
 The limit for 80% comfort is A thermal environment that a substantial majority(more than 80%) of the occupants find thermally acceptable. 
 
-Tpmaout is the prevailing mean outside temperature. \
+Tpmaout is the prevailing mean outside temperature.
+
 Upper limit 80% comfort = (0.31 * tpmaout) + 21.3 \
 Lower limit 80% comfort = (0.31 * tpmaout) + 14.3 
 
@@ -120,7 +121,7 @@ We will use this as a dataset for our climate data to prove our hypothese.
 ## Human-satisfaction mock data creation
 Now that we have our dataset and our mock creation standard we have to apply the ASHRAE55 standard on it to get our satisfaction data.
 To do this we looked around for an already existing package so we don't have to implement the entire standard ourselves. 
-We found this package [Pythermalcomfort](https://pypi.org/project/pythermalcomfort/) which implements a bunch of thermal comfort standards, including the adpative model we will use.\
+We found this package [Pythermalcomfort](https://pypi.org/project/pythermalcomfort/) which implements a bunch of thermal comfort standards, including the adpative model we will use.
 
 We combined this package and the climate dataset to create the acceptability_80% feature for our dataset. The code for this can be found [here](https://github.com/AvansETI/SmartGridAI/blob/b4bux/development/B4B%20Human%20Wellbeing%20Prediction/data_gathering/transform.ipynb).
 
@@ -138,8 +139,8 @@ pros
 
 ## Result
 The result of all this is our own mock dataset that meets our data requirements.
-The code for extracting the climate data can be found [here](https://github.com/AvansETI/SmartGridAI/blob/b4bux/development/B4B%20Human%20Wellbeing%20Prediction/data_gathering/extract.ipynb).\
-The code for transforming the climate data to include satisfaction data can be found [Here](https://github.com/AvansETI/SmartGridAI/blob/b4bux/development/B4B%20Human%20Wellbeing%20Prediction/data_gathering/transform.ipynb).\
+The code for extracting the climate data can be found [here](https://github.com/AvansETI/SmartGridAI/blob/b4bux/development/B4B%20Human%20Wellbeing%20Prediction/data_gathering/extract.ipynb).
+The code for transforming the climate data to include satisfaction data can be found [Here](https://github.com/AvansETI/SmartGridAI/blob/b4bux/development/B4B%20Human%20Wellbeing%20Prediction/data_gathering/transform.ipynb).
 The resulting dataset can be found [Here](https://github.com/AvansETI/SmartGridAI/blob/b4bux/development/B4B%20Human%20Wellbeing%20Prediction/datasets/dataset.csv).
 
 
@@ -172,9 +173,11 @@ The resulting dataset can be found [Here](https://github.com/AvansETI/SmartGridA
 # Figures
 ## Acceptability 80% distribution
 ![Acceptability 80% distribution](images/acceptability_80.png)
+*Acceptability 80% distribution in our dataset* 
 
 ## Acceptability 90% distribution
 ![Acceptability 90% distribution](images/acceptability_90.png)
+*Acceptability 90% distribution in our dataset* 
 
 <h2 id="floor-plans">Floor plans dataset</h2>
 <h3>Room A</h3>
