@@ -4,25 +4,26 @@ schema {
 
 type Query {
 
-    predict(
+    predict(input: PredictionInput!): Int
+}
 
-        temperature: Float,
-        mean_temp_day: Float,
-        heat_index: Float,
+input PredictionInput {
 
-        relative_humidity: Float,
+    temperature: Float,
+    mean_temp_day: Float,
+    heat_index: Float,
 
-        light_sensor_one_wave_length: Float,
-        light_sensor_two_wave_length: Float,
+    relative_humidity: Float,
 
-        number_of_occupants: Int,
-        activity_of_occupants: Int,
+    light_sensor_one_wave_length: Float,
+    light_sensor_two_wave_length: Float,
 
-        state_of_door: Int,
+    number_of_occupants: Int,
+    activity_of_occupants: Int,
 
-        hour: Int,
-        minute: Int,
-        second: Int,
+    state_of_door: Int,
 
-    ): Int
+    hour: Int,
+    minute: Int,
+    second: Int
 }
