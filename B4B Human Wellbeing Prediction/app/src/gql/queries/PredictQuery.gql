@@ -1,4 +1,8 @@
 query PredictQuery($input: PredictionInput!) {
 
-    predict(input: $input)
+    predict(input: $input) {
+
+        satisfaction
+        shapOptions
+    }
 }

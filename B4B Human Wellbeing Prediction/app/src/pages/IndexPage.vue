@@ -42,16 +42,16 @@
                         </v-stepper-content>
 
                         <v-stepper-content :step="1">
-                            <v-card>
+                            <v-card v-if="prediction != null">
                                 <v-card-title class="justify-center align-center flex-column mb-7">
-                                    <v-icon v-if="prediction >= satisfied" :size="70" class="mb-4" :class="predictionDisplayClass">mdi-emoticon-excited-outline</v-icon>
+                                    <v-icon v-if="prediction.satisfaction >= satisfied" :size="70" class="mb-4" :class="predictionDisplayClass">mdi-emoticon-excited-outline</v-icon>
                                     <v-icon v-else :size="70" class="mb-4" :class="predictionDisplayClass">mdi-emoticon-sad-outline</v-icon>
 
                                     <span class="text-h4" v-if="predictionInput.activity_of_occupants != 0">
-                                        The {{ predictionInput.number_of_occupants }} {{ activityOfOccupantsItems.find(ao => ao.value === predictionInput.activity_of_occupants).text.toLowerCase() }} <span :class="predictionDisplayClass">{{ prediction >= satisfied ? "comfortably" : "uncomfortably" }}</span>.
+                                        The {{ predictionInput.number_of_occupants }} {{ activityOfOccupantsItems.find(ao => ao.value === predictionInput.activity_of_occupants).text.toLowerCase() }} <span :class="predictionDisplayClass">{{ prediction.satisfaction >= satisfied ? "comfortably" : "uncomfortably" }}</span>.
                                     </span>
                                     <span class="text-h4" v-else>
-                                        The {{ predictionInput.number_of_occupants }} occupant(s) will be <span :class="predictionDisplayClass">{{ prediction >= satisfied ? "comfortable" : "uncomfortable" }}</span>.
+                                        The {{ predictionInput.number_of_occupants }} occupant(s) will be <span :class="predictionDisplayClass">{{ prediction.satisfaction >= satisfied ? "comfortable" : "uncomfortable" }}</span>.
                                     </span>
                                 </v-card-title>
                                 <v-card-text class="d-flex align-center justify-center">
@@ -67,7 +67,7 @@
                         <v-divider class="my-7"></v-divider>
 
                         <div class="mb-5">
-                            <h3 class="text-h6 mb-2">Why will they be {{ prediction >= satisfied ? "comfortable" : "uncomfortable" }}?</h3>
+                            <h3 class="text-h6 mb-2">Why will they be {{ prediction.satisfaction >= satisfied ? "comfortable" : "uncomfortable" }}?</h3>
                             <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur assumenda ea eius in ipsum nulla recusandae! Cum fugiat id laudantium modi molestiae quae reiciendis totam veritatis. Beatae earum omnis possimus.</div>
                             <div>Accusantium quibusdam quidem quod repellat vel veniam vero voluptas. Aliquam debitis iure libero modi nostrum nulla praesentium repudiandae similique! A ab autem consequatur deleniti hic iure, laborum neque nostrum praesentium.</div>
                             <div>Amet assumenda atque autem, blanditiis eaque enim, expedita explicabo fuga itaque labore nemo numquam pariatur praesentium quas quasi, qui quis quos repellendus rerum ut? Expedita nemo possimus quibusdam quis vitae.</div>
@@ -168,8 +168,8 @@ export default class IndexPage extends Vue {
     get predictionDisplayClass() {
 
         return {
-            "error--text": (this.prediction < this.satisfied),
-            "success--text": (this.prediction >= this.satisfied)
+            "error--text": (this.prediction.satisfaction < this.satisfied),
+            "success--text": (this.prediction.satisfaction >= this.satisfied)
         };
     }
 

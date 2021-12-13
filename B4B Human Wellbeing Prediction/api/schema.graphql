@@ -1,10 +1,17 @@
 schema {
+
     query: Query
 }
 
 type Query {
 
-    predict(input: PredictionInput!): Int
+    predict(input: PredictionInput!): PredictionResponse
+}
+
+type PredictionResponse {
+
+    satisfaction: Int!,
+    shapOptions: String!
 }
 
 input PredictionInput {
