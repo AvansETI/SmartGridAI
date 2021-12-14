@@ -6,6 +6,9 @@ from datetime import datetime
 import cloudpickle
 import luigi
 import pandas as pd
+from sklearn.metrics import roc_auc_score, recall_score, precision_score, log_loss, f1_score, \
+    brier_score_loss, average_precision_score, accuracy_score, balanced_accuracy_score, \
+    make_scorer
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 from tpot import TPOTClassifier
@@ -68,6 +71,36 @@ class ProcessData(luigi.Task):
         df.to_csv(self.output_path)
 
 
+def custom_scoring(y_true, y_pred):
+    accuracy = accuracy_score(y_true, y_pred)
+    balanced_accuracy = balanced_accuracy_score(y_true, y_pred)
+    average_precision = average_precision_score(y_true, y_pred)
+    neg_brier_score = brier_score_loss(y_true, y_pred)
+    f1 = f1_score(y_true, y_pred)
+    neg_log_loss = log_loss(y_true, y_pred) * 0.01
+    precision = precision_score(y_true, y_pred)
+    recall = recall_score(y_true, y_pred)
+    roc_auc = roc_auc_score(y_true, y_pred)
+
+    scores = {
+        'accuracy': accuracy,
+        'balanced_accuracy': balanced_accuracy,
+        'average_precision': average_precision,
+        'neg_brier_score': neg_brier_score,
+        'f1': f1,
+        'neg_log_loss': neg_log_loss,
+        'precision': precision,
+        'recall': recall,
+        'roc_auc': roc_auc,
+    }
+
+    [print(name, score) for name, score in scores.items()]
+
+    print(sum(scores.values()))
+
+    return float(sum(scores.values()))
+
+
 class OptimizeModel(luigi.Task):
     generations = luigi.Parameter(default=10)
     scoring_function = luigi.Parameter(default=None)
@@ -82,18 +115,21 @@ class OptimizeModel(luigi.Task):
     def run(self):
         file_path = self.input()[0].path
 
-        df = pd.read_csv(file_path)
+        df = pd.read_csv(file_path)[:10000]
 
         y = df['target']
         X = df.drop('target', axis=1)
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y.values, test_size=0.33)
 
+        if self.scoring_function is None:
+            self.scoring_function = make_scorer(custom_scoring, greater_is_better=True)
+
         self.set_status_message('Optimizing model')
         pipeline_optimizer = TPOTClassifier(
             generations=self.generations,
             scoring=self.scoring_function,
-            n_jobs=-1,
+            n_jobs=2,
             max_eval_time_mins=10,
             config_dict=self.tpot_config,
             periodic_checkpoint_folder=f'tpot_logs/{default_file_name()}',
