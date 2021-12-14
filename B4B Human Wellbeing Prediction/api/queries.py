@@ -1,6 +1,8 @@
+import os
+import json
 import sensors
 import pandas as pd
-import json
+import cloudpickle as pickle
 from predictor import Predictor
 
 
@@ -43,6 +45,10 @@ def register(query):
         }
 
         predictor = Predictor()
+
+        with open(f"{ os.path.dirname(os.path.abspath(__file__)) }/shap_data.pkl", "rb") as f:
+            shap = pickle.load(f)
+
         prediction_df = pd.DataFrame([list(prediction_data.values())])
 
         return {

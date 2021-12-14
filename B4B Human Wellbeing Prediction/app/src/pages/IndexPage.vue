@@ -19,9 +19,9 @@
 
                                             <ValidationProvider
                                                 vid="number_of_occupants" name="number_of_occupants"
-                                                rules="required|integer|min_value:1" v-slot="{ errors }"
+                                                rules="required|integer|min_value:1|max_value:2147483647" v-slot="{ errors }"
                                             >
-                                                <v-text-field name="number_of_occupants" label="Number of Occupants" type="number" :disabled="shouldDisable" prepend-icon="mdi-account-multiple" v-model.number="predictionInput.number_of_occupants" :error-messages="errors"></v-text-field>
+                                                <v-text-field name="number_of_occupants" min="1" max="2147483647" label="Number of Occupants" type="number" :disabled="shouldDisable" prepend-icon="mdi-account-multiple" v-model.number="predictionInput.number_of_occupants" :error-messages="errors"></v-text-field>
                                             </ValidationProvider>
 
                                             <ValidationProvider
