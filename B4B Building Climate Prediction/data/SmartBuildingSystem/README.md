@@ -1,5 +1,7 @@
 # Smart Building System Dataset
 
+[Dataset from Kaggle](https://www.kaggle.com/ranakrc/smart-building-system)
+
 The dataset used in our AISTATS'17 work contains the data for 5 different types of measurements from 50 rooms in an office building.
 
 Each room includes 5 types of measurements: CO2 concentration, room air humidity, room temperature, luminosity, and PIR motion sensor data.
