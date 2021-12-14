@@ -6,8 +6,7 @@ from flask_cors import CORS
 from routes import register as register_http
 from queries import register as register_graphql
 
-from ariadne import load_schema_from_path, make_executable_schema, \
-    snake_case_fallback_resolvers, ObjectType
+from ariadne import load_schema_from_path, make_executable_schema, ObjectType
 
 # Create Application
 app = Flask(__name__)

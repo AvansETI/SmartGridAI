@@ -1,11 +1,10 @@
 import sensors
 import pandas as pd
-from flask import jsonify
+import json
 from predictor import Predictor
 
 
 def register(query):
-
     @query.field("predict")
     def predict_resolver(obj, info, input):
         prediction_data = {
@@ -49,5 +48,5 @@ def register(query):
         return {
 
             "satisfaction": predictor.predict_model(prediction_df),
-            "shapOptions": jsonify({})
+            "shapOptions": json.dumps({})  # .__dict__
         }

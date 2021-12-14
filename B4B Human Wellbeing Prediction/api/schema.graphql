@@ -11,7 +11,7 @@ type Query {
 type PredictionResponse {
 
     satisfaction: Int!,
-    shapOptions: String!
+    shapOptions: String
 }
 
 input PredictionInput {
