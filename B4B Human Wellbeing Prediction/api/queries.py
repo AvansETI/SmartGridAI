@@ -50,6 +50,7 @@ def register(query):
             'room_A': ((1 if input["room"] == 0 else 0) if "room" in input else None),
             'room_B': ((1 if input["room"] == 1 else 0) if "room" in input else None),
             'room_C': ((1 if input["room"] == 2 else 0) if "room" in input else None),
+            'relative_time': (input["relative_time"] if "relative_time" in input else sensors.get_relative_time()),
         }
 
         if (

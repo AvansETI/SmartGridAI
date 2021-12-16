@@ -244,7 +244,9 @@ export default class IndexPage extends Vue {
         this.predictionInput = {
 
             number_of_occupants: 1,
-            activity_of_occupants: 0
+            activity_of_occupants: 0,
+            window_state: false,
+            room: null
         }
 
         this.prediction = null;
