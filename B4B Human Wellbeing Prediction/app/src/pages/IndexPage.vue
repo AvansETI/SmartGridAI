@@ -12,53 +12,148 @@
                 <v-stepper v-model.number="step">
                     <v-stepper-items>
                         <v-stepper-content :step="0">
-                            <v-card>
-                                <v-card-text>
-                                    <ValidationObserver ref="validationObserver" v-slot="{ handleSubmit }" class="login-form-holder">
-                                        <v-form @submit.prevent="handleSubmit(predict)">
+                            <v-tabs v-model="tab" background-color="transparent" grow show-arrows>
+                                <v-tab>Predict Now</v-tab>
+                                <v-tab>Predict in the Future</v-tab>
+                            </v-tabs>
 
-                                            <ValidationProvider
-                                                vid="number_of_occupants" name="number_of_occupants"
-                                                rules="required|integer|min_value:1|max_value:2147483647" v-slot="{ errors }"
-                                            >
-                                                <v-text-field name="number_of_occupants" min="1" max="2147483647" label="Number of Occupants" type="number" :disabled="shouldDisable" prepend-icon="mdi-account-multiple" v-model.number="predictionInput.number_of_occupants" :error-messages="errors"></v-text-field>
-                                            </ValidationProvider>
+                            <v-tabs-items v-model="tab">
+                                <v-tab-item>
+                                    <v-card flat>
+                                        <v-card-text>
+                                            <ValidationObserver ref="basicValidationObserver" v-slot="{ handleSubmit }" class="basic-form-holder">
+                                                <v-form @submit.prevent="handleSubmit(() => predict(false))">
 
-                                            <ValidationProvider
-                                                vid="activity_of_occupants" name="activity_of_occupants"
-                                                rules="required|integer" v-slot="{ errors }"
-                                            >
-                                                <v-select name="activity_of_occupants" label="What will the occupants be doing?" :disabled="shouldDisable" prepend-icon="mdi-account-multiple" v-model.number="predictionInput.activity_of_occupants" :items="activityOfOccupantsItems" :error-messages="errors"></v-select>
-                                            </ValidationProvider>
-
-                                            <v-row>
-                                                <v-col cols="12" md="6">
                                                     <ValidationProvider
-                                                        vid="window_state" name="window_state"
-                                                        rules="required" v-slot="{ errors }"
+                                                        vid="number_of_occupants" name="number_of_occupants"
+                                                        rules="required|integer|min_value:1|max_value:2147483647" v-slot="{ errors }"
                                                     >
-                                                        <v-checkbox name="window_state" label="Are there any open windows?" :disabled="shouldDisable" :prepend-icon="windowIcon" v-model="predictionInput.window_state" :error-messages="errors"></v-checkbox>
+                                                        <v-text-field name="number_of_occupants" min="1" max="2147483647" label="Number of Occupants" type="number" :disabled="shouldDisable" prepend-icon="mdi-account-multiple" v-model.number="predictionInput.number_of_occupants" :error-messages="errors"></v-text-field>
                                                     </ValidationProvider>
-                                                </v-col>
 
-                                                <v-col cols="12" md="6">
                                                     <ValidationProvider
-                                                        vid="room" name="room"
-                                                        rules="required" v-slot="{ errors }"
+                                                        vid="activity_of_occupants" name="activity_of_occupants"
+                                                        rules="required|integer" v-slot="{ errors }"
                                                     >
-                                                        <v-select name="room" :items="roomItems" label="What room will the occupants be in?" :disabled="shouldDisable" prepend-icon="mdi-office-building-marker" v-model="predictionInput.room" :error-messages="errors"></v-select>
+                                                        <v-select name="activity_of_occupants" label="What will the occupants be doing?" :disabled="shouldDisable" prepend-icon="mdi-account-multiple" v-model.number="predictionInput.activity_of_occupants" :items="activityOfOccupantsItems" :error-messages="errors"></v-select>
                                                     </ValidationProvider>
-                                                </v-col>
-                                            </v-row>
 
-                                            <div class="d-flex justify-end">
-                                                <v-btn :disabled="shouldDisable" :loading="predicting" color="primary" type="submit">Predict</v-btn>
-                                            </div>
+                                                    <v-row>
+                                                        <v-col cols="12" md="6">
+                                                            <ValidationProvider
+                                                                vid="window_state" name="window_state"
+                                                                rules="required" v-slot="{ errors }"
+                                                            >
+                                                                <v-checkbox name="window_state" label="Are there any open windows?" :disabled="shouldDisable" :prepend-icon="windowIcon" v-model="predictionInput.window_state" :error-messages="errors"></v-checkbox>
+                                                            </ValidationProvider>
+                                                        </v-col>
 
-                                        </v-form>
-                                    </ValidationObserver>
-                                </v-card-text>
-                            </v-card>
+                                                        <v-col cols="12" md="6">
+                                                            <ValidationProvider
+                                                                vid="room" name="room"
+                                                                rules="required" v-slot="{ errors }"
+                                                            >
+                                                                <v-select name="room" :items="roomItems" label="What room will the occupants be in?" :disabled="shouldDisable" prepend-icon="mdi-office-building-marker" v-model="predictionInput.room" :error-messages="errors"></v-select>
+                                                            </ValidationProvider>
+                                                        </v-col>
+                                                    </v-row>
+
+                                                    <div class="d-flex justify-end">
+                                                        <v-btn :disabled="shouldDisable" :loading="predicting" color="primary" type="submit">Predict</v-btn>
+                                                    </div>
+
+                                                </v-form>
+                                            </ValidationObserver>
+                                        </v-card-text>
+                                    </v-card>
+                                </v-tab-item>
+
+                                <v-tab-item>
+                                    <v-card flat>
+                                        <v-card-text>
+                                            <ValidationObserver ref="extendedValidationObserver" v-slot="{ handleSubmit }" class="extended-form-holder">
+                                                <v-form @submit.prevent="handleSubmit(() => predict(true))">
+
+                                                    <ValidationProvider
+                                                        vid="number_of_occupants" name="number_of_occupants"
+                                                        rules="required|integer|min_value:1|max_value:2147483647" v-slot="{ errors }"
+                                                    >
+                                                        <v-text-field name="number_of_occupants" min="1" max="2147483647" label="Number of Occupants" type="number" :disabled="shouldDisable" prepend-icon="mdi-account-multiple" v-model.number="predictionInput.number_of_occupants" :error-messages="errors"></v-text-field>
+                                                    </ValidationProvider>
+
+                                                    <ValidationProvider
+                                                        vid="activity_of_occupants" name="activity_of_occupants"
+                                                        rules="required|integer" v-slot="{ errors }"
+                                                    >
+                                                        <v-select name="activity_of_occupants" label="What will the occupants be doing?" :disabled="shouldDisable" prepend-icon="mdi-account-multiple" v-model.number="predictionInput.activity_of_occupants" :items="activityOfOccupantsItems" :error-messages="errors"></v-select>
+                                                    </ValidationProvider>
+
+                                                    <v-row>
+                                                        <v-col cols="12" md="6">
+                                                            <ValidationProvider
+                                                                vid="window_state" name="window_state"
+                                                                rules="required" v-slot="{ errors }"
+                                                            >
+                                                                <v-checkbox name="window_state" label="Are there any open windows?" :disabled="shouldDisable" :prepend-icon="windowIcon" v-model="predictionInput.window_state" :error-messages="errors"></v-checkbox>
+                                                            </ValidationProvider>
+                                                        </v-col>
+
+                                                        <v-col cols="12" md="6">
+                                                            <ValidationProvider
+                                                                vid="room" name="room"
+                                                                rules="required" v-slot="{ errors }"
+                                                            >
+                                                                <v-select name="room" :items="roomItems" label="What room will the occupants be in?" :disabled="shouldDisable" prepend-icon="mdi-office-building-marker" v-model="predictionInput.room" :error-messages="errors"></v-select>
+                                                            </ValidationProvider>
+                                                        </v-col>
+                                                    </v-row>
+
+                                                    <v-divider class="my-7"></v-divider>
+
+                                                    <v-row>
+                                                        <v-col cols="12" md="6">
+                                                            <ValidationProvider
+                                                                vid="time" name="time"
+                                                                rules="" v-slot="{ errors }"
+                                                            >
+                                                                <v-time-picker
+                                                                    format="24hr" name="time" label="Time" use-seconds
+                                                                    :disabled="shouldDisable" prepend-icon="mdi-clock-outline"
+                                                                    v-model="predictionInput.time" :error-messages="errors"
+                                                                ></v-time-picker>
+                                                            </ValidationProvider>
+                                                        </v-col>
+                                                        <v-col cols="12" md="6">
+                                                            <ValidationProvider
+                                                                vid="temperature" name="temperature"
+                                                                rules="min_value:-10|max_value:100" v-slot="{ errors }"
+                                                            >
+                                                                <v-slider name="temperature" :color="temperatureColor" min="-10" max="50" step="0.5" label="Temperature" :disabled="shouldDisable" prepend-icon="mdi-thermometer-lines" v-model.number="predictionInput.temperature" :error-messages="errors">
+                                                                    <template v-slot:append>
+                                                                        <h3 :style="`color: ${ temperatureColor };`">{{ predictionInput.temperature.toFixed(1) }}&deg;</h3>
+                                                                    </template>
+                                                                </v-slider>
+                                                            </ValidationProvider>
+
+                                                            <ValidationProvider
+                                                                vid="state_of_door" name="state_of_door"
+                                                                rules="required" v-slot="{ errors }"
+                                                            >
+                                                                <v-checkbox name="state_of_door" label="Are there any open doors?" :disabled="shouldDisable" :prepend-icon="doorIcon" v-model="predictionInput.state_of_door" :error-messages="errors"></v-checkbox>
+                                                            </ValidationProvider>
+                                                        </v-col>
+                                                    </v-row>
+
+                                                    <div class="d-flex justify-end">
+                                                        <v-btn :disabled="shouldDisable" :loading="predicting" color="primary" type="submit">Predict</v-btn>
+                                                    </div>
+
+                                                </v-form>
+                                            </ValidationObserver>
+                                        </v-card-text>
+                                    </v-card>
+                                </v-tab-item>
+                            </v-tabs-items>
                         </v-stepper-content>
 
                         <v-stepper-content :step="1">
@@ -118,6 +213,7 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
+import colors from "vuetify/lib/util/colors";
 
 // Services
 import { PredictionService } from "@/services/prediction-service";
@@ -144,30 +240,71 @@ export default class IndexPage extends Vue {
         return {
 
             step: 0,
+            tab: 0,
 
             satisfied: 1,
 
             predicting: false,
             prediction: null,
 
-            predictionInput: {
+            basicFields: [
+                "number_of_occupants",
+                "activity_of_occupants",
+                "window_state", "room"
+            ],
+            emptyPredictionInput: {
 
                 number_of_occupants: 1,
                 activity_of_occupants: 0,
                 window_state: false,
-                room: null
-            }
+                state_of_door: false,
+                room: null,
+                temperature: 21.5,
+                time: null
+            },
+
+            predictionInput: {}
         };
     }
 
     created() {
 
         this.predictionService = new PredictionService(this.$apollo.getClient());
+        this.predictionInput = { ...this.emptyPredictionInput };
+    }
+
+    get temperatureColor() {
+
+        if (this.predictionInput?.temperature <= 5) {
+
+            return colors.blue.darken1;
+        }
+        else if (this.predictionInput?.temperature <= 15) {
+
+            return colors.blue.base;
+        }
+        else if (this.predictionInput?.temperature <= 30) {
+
+            return this.$vuetify?.theme?.themes?.light?.primary || null;
+        }
+        else if (this.predictionInput?.temperature <= 40) {
+
+            return colors.deepOrange.base;
+        }
+        else if (this.predictionInput?.temperature <= 50) {
+
+            return colors.red.base;
+        }
     }
 
     get windowIcon() {
 
         return this.predictionInput.window_state ? "mdi-window-open-variant" : "mdi-window-closed-variant";
+    }
+
+    get doorIcon() {
+
+        return this.predictionInput.state_of_door ? "mdi-door-sliding-open" : "mdi-door-sliding";
     }
 
     get roomItems() {
@@ -222,12 +359,35 @@ export default class IndexPage extends Vue {
         };
     }
 
-    async predict() {
+    async predict(extended = false) {
 
         this.predicting = true;
+
+        if (extended && this.predictionInput.time != null) {
+
+            //Prep Time
+            const timeMap = this.predictionInput.time.split(":");
+
+            this.predictionInput.hour = parseInt(timeMap[0]);
+            this.predictionInput.minute = parseInt(timeMap[1]);
+            this.predictionInput.second = parseInt(timeMap[2]);
+        }
+
+        delete this.predictionInput.time;
+
         this.prediction = await this.predictionService.predict({
 
-            input: this.predictionInput
+            input: extended ? this.predictionInput : {
+
+                ...(
+
+                    this.basicFields.reduce(
+
+                        (acc, key) => ({ ...acc, [key]: this.predictionInput[key] }),
+                        {}
+                    )
+                )
+            }
         });
         this.predicting = false;
 
@@ -240,15 +400,7 @@ export default class IndexPage extends Vue {
     reset() {
 
         this.step = 0;
-
-        this.predictionInput = {
-
-            number_of_occupants: 1,
-            activity_of_occupants: 0,
-            window_state: false,
-            room: null
-        }
-
+        this.predictionInput = { ...this.emptyPredictionInput };
         this.prediction = null;
     }
 }

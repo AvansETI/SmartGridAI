@@ -39,12 +39,15 @@ def register(query):
                 if "activity_of_occupants" in input
                 else sensors.get_activity_of_occupants()
             ),
-            'state_of_door': (input["state_of_door"] if "state_of_door" in input else sensors.get_state_of_door()),
+            'state_of_door': (
+                (1 if input["state_of_door"] is True else 0)
+                if "state_of_door" in input else sensors.get_state_of_door()
+            ),
             'hour': (input["hour"] if "hour" in input else sensors.get_hour()),
             'minute': (input["minute"] if "minute" in input else sensors.get_minute()),
             'second': (input["second"] if "second" in input else sensors.get_second()),
             'window_state': (
-                (1 if input["window_state"] == True else False)
+                (1 if input["window_state"] is True else 0)
                 if "window_state" in input else sensors.get_window_state()
             ),
             'room_A': ((1 if input["room"] == 0 else 0) if "room" in input else None),
@@ -54,9 +57,9 @@ def register(query):
         }
 
         if (
-            prediction_data["room_A"] is None
-            and prediction_data["room_B"] is None
-            and prediction_data["room_C"] is None
+                prediction_data["room_A"] is None
+                and prediction_data["room_B"] is None
+                and prediction_data["room_C"] is None
         ):
             # @TODO: Replace with sensors.get_room() ?
             prediction_data[f"room_{choice(['A', 'B', 'C'])}"] = 1
