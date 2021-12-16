@@ -11,7 +11,7 @@ def default_file_name():
 
 
 def get_data_and_split(file_path):
-    df = pd.read_csv(file_path)[:1000]
+    df = pd.read_csv(file_path)
 
     y = df['target']
     X = df.drop('target', axis=1)
