@@ -80,7 +80,7 @@ class OptimizeModel(luigi.Task):
 
     def run(self):
         file_path = self.input()[0].path
-        X_train, X_test, y_train, y_test = get_data_and_split(file_path)
+        X_train, _, y_train, _ = get_data_and_split(file_path)
 
         if self.scoring_function is None:
             self.scoring_function = make_scorer(custom_scoring, greater_is_better=True)
@@ -114,16 +114,13 @@ class DeployModel(luigi.Task):
 
     def run(self):
         data_file_path = self.input()[0].path
-        X_train, X_test, y_train, y_test = get_data_and_split(data_file_path)
+        _, X_test, _, y_test = get_data_and_split(data_file_path)
 
         model_file_path = self.input()[1].path
         with open(model_file_path, "rb") as file:
             model = cloudpickle.load(file)
 
         score = model.score(X_test, y_test)
-
-        print(self.score_threshold)
-        print(score)
 
         if self.score_threshold < score:
             shutil.copy(model_file_path, '../api/model.pkl')
@@ -138,16 +135,13 @@ class DeployShap(luigi.Task):
 
     def run(self):
         data_file_path = self.input()[0].path
-        X_train, X_test, y_train, y_test = get_data_and_split(data_file_path)
+        X_train, X_test, _, y_test = get_data_and_split(data_file_path)
 
         model_file_path = self.input()[1].path
         with open(model_file_path, "rb") as file:
             pipeline = cloudpickle.load(file)
 
         score = pipeline.score(X_test, y_test)
-
-        print(self.score_threshold)
-        print(score)
 
         if self.score_threshold < score:
             explainer = shap.KernelExplainer(pipeline.predict_proba, shap.kmeans(X_train, 15))

@@ -11,12 +11,12 @@ def default_file_name():
 
 
 def get_data_and_split(file_path):
-    df = pd.read_csv(file_path)[:1000]
+    df = pd.read_csv(file_path)
 
     y = df['target']
     X = df.drop('target', axis=1)
 
-    return train_test_split(X, y, stratify=y.values, test_size=0.33)
+    return train_test_split(X, y, stratify=y.values, test_size=0.33, random_state=1)
 
 
 def custom_scoring(y_true, y_pred):
