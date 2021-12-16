@@ -31,6 +31,26 @@
                                                 <v-select name="activity_of_occupants" label="What will the occupants be doing?" :disabled="shouldDisable" prepend-icon="mdi-account-multiple" v-model.number="predictionInput.activity_of_occupants" :items="activityOfOccupantsItems" :error-messages="errors"></v-select>
                                             </ValidationProvider>
 
+                                            <v-row>
+                                                <v-col cols="12" md="6">
+                                                    <ValidationProvider
+                                                        vid="window_state" name="window_state"
+                                                        rules="required" v-slot="{ errors }"
+                                                    >
+                                                        <v-checkbox name="window_state" label="Are there any open windows?" :disabled="shouldDisable" :prepend-icon="windowIcon" v-model="predictionInput.window_state" :error-messages="errors"></v-checkbox>
+                                                    </ValidationProvider>
+                                                </v-col>
+
+                                                <v-col cols="12" md="6">
+                                                    <ValidationProvider
+                                                        vid="room" name="room"
+                                                        rules="required" v-slot="{ errors }"
+                                                    >
+                                                        <v-select name="room" :items="roomItems" label="What room will the occupants be in?" :disabled="shouldDisable" prepend-icon="mdi-office-building-marker" v-model="predictionInput.room" :error-messages="errors"></v-select>
+                                                    </ValidationProvider>
+                                                </v-col>
+                                            </v-row>
+
                                             <div class="d-flex justify-end">
                                                 <v-btn :disabled="shouldDisable" :loading="predicting" color="primary" type="submit">Predict</v-btn>
                                             </div>
@@ -134,6 +154,8 @@ export default class IndexPage extends Vue {
 
                 number_of_occupants: 1,
                 activity_of_occupants: 0,
+                window_state: false,
+                room: null
             }
         };
     }
@@ -141,6 +163,33 @@ export default class IndexPage extends Vue {
     created() {
 
         this.predictionService = new PredictionService(this.$apollo.getClient());
+    }
+
+    get windowIcon() {
+
+        return this.predictionInput.window_state ? "mdi-window-open-variant" : "mdi-window-closed-variant";
+    }
+
+    get roomItems() {
+
+        //@TODO: Retrieve from API endpoint
+        return [
+
+            {
+                text: "Room A",
+                value: 0
+            },
+
+            {
+                text: "Room B",
+                value: 1
+            },
+
+            {
+                text: "Room C",
+                value: 2
+            }
+        ];
     }
 
     get shouldDisable() {

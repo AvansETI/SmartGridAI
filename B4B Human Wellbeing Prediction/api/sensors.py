@@ -44,3 +44,7 @@ def get_minute():
 
 def get_second():
     return 29.444599636323936
+
+
+def get_window_state():
+    return 0

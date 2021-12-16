@@ -28,9 +28,12 @@ input PredictionInput {
     number_of_occupants: Int,
     activity_of_occupants: Int,
 
-    state_of_door: Int,
+    state_of_door: Float, # Int
 
     hour: Int,
     minute: Int,
-    second: Int
+    second: Int,
+
+    window_state: Boolean,
+    room: Int,
 }
