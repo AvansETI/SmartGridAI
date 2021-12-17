@@ -57,15 +57,15 @@ def custom_scoring_threshold(model, X_test, y_test):
     mean_score_threshold = 0.9
 
     score_thresholds = {
-        'accuracy': 0.99,
-        'balanced_accuracy': 0.99,
-        'average_precision': 0.99,
-        'neg_brier_score': 0.99,
-        'f1': 0.99,
-        'neg_log_loss': 0.99,
-        'precision': 0.99,
-        'recall': 0.99,
-        'roc_auc': 0.99,
+        'accuracy': 0.9,
+        'balanced_accuracy': 0.9,
+        'average_precision': 0.9,
+        'neg_brier_score': 0.9,
+        'f1': 0.9,
+        'neg_log_loss': 0.9,
+        'precision': 0.9,
+        'recall': 0.9,
+        'roc_auc': 0.9,
     }
 
     predictions = model.predict(X_test)
