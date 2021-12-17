@@ -10,7 +10,7 @@ from sklearn.metrics import make_scorer
 from sklearn.utils import shuffle
 from tpot import TPOTClassifier
 
-from helpers import get_data_and_split, custom_scoring, default_file_name
+from helpers import get_data_and_split, custom_scoring, default_file_name, custom_scoring_threshold
 
 
 class CombineData(luigi.Task):
@@ -87,8 +87,7 @@ class OptimizeModel(luigi.Task):
             self.scoring_function = make_scorer(custom_scoring, greater_is_better=True)
 
         pipeline_optimizer = TPOTClassifier(
-            generations=5,
-            population_size=10,
+            generations=self.generations,
             scoring=self.scoring_function,
             n_jobs=-1,
             max_eval_time_mins=10,
@@ -107,7 +106,6 @@ class OptimizeModel(luigi.Task):
 
 
 class DeployModel(luigi.Task):
-    score_threshold = luigi.FloatParameter(default=0.99 * 9)
     time = luigi.Parameter(default=time.time())
 
     def requires(self):
@@ -121,14 +119,13 @@ class DeployModel(luigi.Task):
         with open(model_file_path, "rb") as file:
             model = cloudpickle.load(file)
 
-        score = model.score(X_test, y_test)
+        passed_threshold = custom_scoring_threshold(model, X_test, y_test)
 
-        if self.score_threshold < score:
+        if passed_threshold:
             shutil.copy(model_file_path, '../api/model.pkl')
 
 
 class DeployShap(luigi.Task):
-    score_threshold = luigi.FloatParameter(default=0.99 * 9)
     time = luigi.Parameter(default=time.time())
 
     def requires(self):
@@ -140,12 +137,12 @@ class DeployShap(luigi.Task):
 
         model_file_path = self.input()[1].path
         with open(model_file_path, "rb") as file:
-            pipeline = cloudpickle.load(file)
+            model = cloudpickle.load(file)
 
-        score = pipeline.score(X_test, y_test)
+        passed_threshold = custom_scoring_threshold(model, X_test, y_test)
 
-        if self.score_threshold < score:
-            explainer = shap.KernelExplainer(pipeline.predict_proba, shap.kmeans(X_train, 15))
+        if passed_threshold:
+            explainer = shap.KernelExplainer(model.predict_proba, shap.kmeans(X_train, 15))
             with open('../api/explainer.pkl', 'wb') as file:
                 cloudpickle.dump(explainer, file)
 

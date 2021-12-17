@@ -4,11 +4,8 @@ from cloudpickle import cloudpickle
 
 
 class Predictor:
-    def __init__(self):
-        self.model = self.load_model()
-
     def predict_model(self, data):
-        return self.model.predict(data)[0]
+        return self.load_model().predict(data)[0]
 
     def load_model(self, filename='model.pkl'):
         with open(filename, "rb") as file:
@@ -37,3 +34,16 @@ class Predictor:
             plot_cmap=["#ff0d57", "#008000"],
             feature_names=feature_names,
         )
+
+    def get_model_steps(self):
+        model = self.load_model()
+
+        steps = {}
+
+        if type(model).__name__ == 'Pipeline':
+            for i in model.named_steps:
+                steps[i] = model[i].get_params()
+        else:
+            steps[type(model).__name__] = model.get_params()
+
+        return steps
