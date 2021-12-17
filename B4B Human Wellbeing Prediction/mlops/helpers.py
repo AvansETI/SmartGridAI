@@ -19,7 +19,7 @@ def get_data_and_split(file_path):
     return train_test_split(X, y, stratify=y.values, test_size=0.33, random_state=1)
 
 
-def custom_scoring(y_true, y_pred):
+def score(y_true, y_pred):
     accuracy = accuracy_score(y_true, y_pred)
     balanced_accuracy = balanced_accuracy_score(y_true, y_pred)
     average_precision = average_precision_score(y_true, y_pred)
@@ -46,4 +46,38 @@ def custom_scoring(y_true, y_pred):
 
     print(f'total {sum(scores.values())}\n')
 
-    return sum(scores.values())
+    return scores
+
+
+def custom_scoring(y_true, y_pred):
+    return sum(score(y_true, y_pred).values())
+
+
+def custom_scoring_threshold(model, X_test, y_test):
+    mean_score_threshold = 0.9
+
+    score_thresholds = {
+        'accuracy': 0.9,
+        'balanced_accuracy': 0.9,
+        'average_precision': 0.9,
+        'neg_brier_score': 0.9,
+        'f1': 0.9,
+        'neg_log_loss': 0.9,
+        'precision': 0.9,
+        'recall': 0.9,
+        'roc_auc': 0.9,
+    }
+
+    predictions = model.predict(X_test)
+
+    scores = score(predictions, y_test)
+    total_score = sum(scores.values())
+
+    if total_score < mean_score_threshold * len(scores):
+        return False
+
+    for key, value in score_thresholds.items():
+        if scores[key] < value:
+            return False
+
+    return True
