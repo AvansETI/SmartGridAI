@@ -30,5 +30,10 @@ class Predictor:
 
         shap_values = explainer.shap_values(data)
 
-        return shap.plots.force(explainer.expected_value[0], shap_values[0], data, plot_cmap=["#ff0d57", "#008000"],
-                                feature_names=feature_names)
+        return shap.plots.force(
+            explainer.expected_value[0],
+            shap_values[0],
+            data,
+            plot_cmap=["#ff0d57", "#008000"],
+            feature_names=feature_names,
+        )
