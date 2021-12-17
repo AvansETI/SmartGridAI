@@ -149,6 +149,8 @@ class DeployShap(luigi.Task):
             with open('../api/explainer.pkl', 'wb') as file:
                 cloudpickle.dump(explainer, file)
 
+            pd.DataFrame({"features": X_train.columns}).to_csv("../api/features.cvs", index=False)
+
 
 if __name__ == '__main__':
     luigi.build([DeployModel(), DeployShap()])
