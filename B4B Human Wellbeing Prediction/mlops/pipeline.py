@@ -113,7 +113,7 @@ class DeployModel(luigi.Task):
 
     def run(self):
         data_file_path = self.input()[0].path
-        _, X_test, _, y_test = get_data_and_split(data_file_path)
+        X_train, X_test, y_train, y_test = get_data_and_split(data_file_path)
 
         model_file_path = self.input()[1].path
         with open(model_file_path, "rb") as file:
@@ -133,7 +133,7 @@ class DeployShap(luigi.Task):
 
     def run(self):
         data_file_path = self.input()[0].path
-        X_train, X_test, _, y_test = get_data_and_split(data_file_path)
+        X_train, X_test, y_train, y_test = get_data_and_split(data_file_path)
 
         model_file_path = self.input()[1].path
         with open(model_file_path, "rb") as file:
