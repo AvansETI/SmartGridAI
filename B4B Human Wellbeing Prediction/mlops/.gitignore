@@ -1,3 +1,5 @@
+luigi.db
+luigi-state.pickle
 .vscode
 *.code-workspace
 .history/
