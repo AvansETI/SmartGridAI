@@ -45,15 +45,13 @@ Because precise relationships between exogenous inputs and target variables is o
 
 ### 4.1 Interpretable Multi-Head attention (IMHA)
 
-The TFT makes use of a modified Attention mechanism, which was first introduced in regular transformer networks. In principle, the input for the attention mechanism is converted to a Query ($Q$) Key ($K$) and Value ($V$) vector. $Q$ and $K$ are pulled through a normilazation operation, often the scaled dot-product attention:($Softmax(QK^{T}/ \sqrt {d_{attn}})$) (source 1).
+The TFT makes use of a modified Attention mechanism, which was first introduced in regular transformer networks. To understand this modified version we must first cover regular and multiheaded attention. In principle, the input for the attention mechanism is converted to a Query ($Q$) Key ($K$) and Value ($V$) vector. $Q$ and $K$ are pulled through a normilazation operation, often the scaled dot-product attention:($Softmax(QK^{T}/ \sqrt {d_{attn}})$) (source 1). An improvement on the attention mechanism is the multiheaded attention (source 1). By using different heads, the model can encode multiple relationships and nuances for each input. This greatly improves the learning ability of the model. I've included 4 sources under the self attention paper which go in to great detail on how the attention mechanisms work if further explanation is needed. Interpretable multiheaded attention takes it a step further by sharing information between the single attention heads. 
+
 ### 4.2 Temporal process
 
 
+
 ## 5. Prediction intervals
-
-
-
-
 
 
 Quantile: a quantile defines a particular part of a data set. It determines how many values in a distribution are above or below a certain limit. For example, if you have a dataset of 15 points in a linear fasion, a line could be drawn on the 8th point. This line will then be the 50% quantile or the 0.5 quantile (See figure 2). 
@@ -72,6 +70,10 @@ In the regression loss equation above, as q has a value between 0 and 1, the fir
 
 ## Sources: 
 - https://arxiv.org/pdf/1706.03762.pdf
+    - https://towardsdatascience.com/transformers-explained-visually-part-1-overview-of-functionality-95a6dd460452
+    - https://towardsdatascience.com/transformers-explained-visually-part-2-how-it-works-step-by-step-b49fa4a64f34
+    - https://towardsdatascience.com/transformers-explained-visually-part-3-multi-head-attention-deep-dive-1c1ff1024853
+    - https://towardsdatascience.com/transformers-explained-visually-not-just-how-but-why-they-work-so-well-d840bd61a9d3
 - https://towardsdatascience.com/illustrated-self-attention-2d627e33b20a
 - https://towardsdatascience.com/transformers-141e32e69591
 - https://stats.stackexchange.com/questions/421935/what-exactly-are-keys-queries-and-values-in-attention-mechanisms
