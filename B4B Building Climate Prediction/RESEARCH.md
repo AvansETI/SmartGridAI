@@ -11,7 +11,7 @@
 
 # Temporal Fusion Transformer (TFT)
 
-For the forcast predictions we used a (at this time) state of the art model specifically build for TimeSeries predicitions, The Temporal Fusion Transformer. The TFT specializes on Multi-Horizon forcasting (a model capable of predicting multiple attributes at once) which is needed for the predicting a climate within a building, since the climate is defined by more than one variable. In this document, we will shortly discuss the architecture of this model. For more details you can check source 6.
+For the forcast predictions we used a (at this time) state of the art model specifically build for TimeSeries predicitions, The Temporal Fusion Transformer. The TFT specializes on Multi-Horizon forcasting (a model capable of predicting multiple attributes at once) which is needed for the predicting a climate within a building, since the climate is defined by more than one variable. In this document, we will shortly discuss the architecture of this model. This document is not a replacement for the TFT paper. Please read and research the sources given if you require a full understanding of this model and how it operates.
 
 Below you can see the architecture of the TFT, with an explanation on how it works just below it.
 
@@ -45,14 +45,32 @@ Because precise relationships between exogenous inputs and target variables is o
 
 ### 4.1 Interpretable Multi-Head attention (IMHA)
 
-The TFT makes use of a modified Attention mechanism, which was first introduced in regular transformer networks. To understand this modified version we must first cover regular and multiheaded attention. In principle, the input for the attention mechanism is converted to a Query ($Q$) Key ($K$) and Value ($V$) vector. $Q$ and $K$ are pulled through a normilazation operation, often the scaled dot-product attention:($Softmax(QK^{T}/ \sqrt {d_{attn}})$) (source 1). An improvement on the attention mechanism is the multiheaded attention (source 1). By using different heads, the model can encode multiple relationships and nuances for each input. This greatly improves the learning ability of the model. I've included 4 sources under the self attention paper which go in to great detail on how the attention mechanisms work if further explanation is needed. Interpretable multiheaded attention takes it a step further by sharing information between the single attention heads. 
+The TFT makes use of a modified Attention mechanism, which was first introduced in regular transformer networks. To understand this modified version we must first cover regular and multiheaded attention. In principle, the input for the attention mechanism is converted to a Query ($Q$) Key ($K$) and Value ($V$) vector. $Q$ and $K$ are pulled through a normilazation operation, often the scaled dot-product attention:($Softmax(QK^{T}/ \sqrt {d_{attn}})$) (source 1). An improvement on the attention mechanism is the multiheaded attention (source 1). By using different heads, the model can encode multiple relationships and nuances for each input. This greatly improves the learning ability of the model. I've included 4 sources under the self attention paper which go in to great detail on how the attention mechanisms work if further explanation is needed. To make the model more explainable, Interpretable multiheaded attention is used. By sharing weights and values across all heads, the IMHA yields an increased representation capacity, compared to the regular multi-headed attention.
 
-### 4.2 Temporal process
+### 4.2 Temporal process (Temporal Fusion Decoder)
 
+This is where the 'magic' happens. There are multiple layers in the Temporal Fusion Decoder (TFD) to learn temporal relationships present in data.
 
+#### 4.2.1 Locality Enhancement with Sequence-to-Sequence Layer
+
+?
+
+#### 4.2.2 Static Enrichment Layer
+
+Static covariates often have a significant influence on the temporal dynamics (e.g. genetic information on disease risk). To account for this, the TFD makes use of a static enrichment layer which enhances the temporal features with static metadata. For this operation, a GRN is used where the aforementioned context vector $c_{e}$ is used for the enrichment, which comes from a static covariate encoder in the 2nd layer of the TFT model.
+
+#### 4.2.3 Temporal Self-Attention Layer
+
+After the enrichment, self attention with IMHA is applied. decoder masking is applied to the multi-head attention layer to ensure that each temporal dimension can only attend to features preceding it. Besides preserving causal information flow via masking, the self-attention layer allows TFT to pick up long-range dependencies that may be challenging for RNN-based architectures to learn. Following the self-attention layer, an additional gating layer is also applied to facilitate training
+
+#### 4.2.4 Position-wise Feed-forward Layer
+
+We apply an additional non-linear processing to the outputs of the selfattention layer. Similar to the static enrichment layer, this makes use of  GRNs: $ψ(t, n) = GRN_{ψ} (δ(t, n))$ where the weights of $GRN_{ψ}$ are shared across the entire layer. As per Fig. 2, we also apply a gated residual connection which skips over the entire transformer block, providing a direct path to the sequence-to-sequence layer – yielding a
+simpler model if additional complexity is not required, as shown here: $\widetilde{ψ}(t, n) = LayerNorm(\widetilde{φ}(t, n) + GLU\widetilde{ψ}(ψ(t, n)))$
 
 ## 5. Prediction intervals
 
+Before we explain the output/prediction intervals of the model, we first need to understand what quantiles are and what quantile regression is.
 
 Quantile: a quantile defines a particular part of a data set. It determines how many values in a distribution are above or below a certain limit. For example, if you have a dataset of 15 points in a linear fasion, a line could be drawn on the 8th point. This line will then be the 50% quantile or the 0.5 quantile (See figure 2). 
 
@@ -68,6 +86,8 @@ For a set of predictions, the loss will be the average.
 
 In the regression loss equation above, as q has a value between 0 and 1, the first term will be positive and dominate when over predicting, $y^{i}_{p} > y_{i}$, and the second term will dominate when under-predicting, $y^{i}_{p} < y_{i}$. For q equal to 0.5, under-prediction and over-prediction will be penalized by the same factor, and the median is obtained. The larger the value of $q$, the more over-predictions are penalized compared to under-predictions. For $q$ equal to 0.75, over-predictions will be penalized by a factor of 0.75, and under-predictions by a factor of 0.25. The model will then try to avoid over-predictions approximately three times as hard as under-predictions, and the 0.75 quantile will be obtained.
 
+Now that we have a clear understanding of these, we can start explaining the quantile forcasting and the TFT's loss function.
+
 ## Sources: 
 - https://arxiv.org/pdf/1706.03762.pdf
     - https://towardsdatascience.com/transformers-explained-visually-part-1-overview-of-functionality-95a6dd460452
@@ -79,13 +99,4 @@ In the regression loss equation above, as q has a value between 0 and 1, the fir
 - https://stats.stackexchange.com/questions/421935/what-exactly-are-keys-queries-and-values-in-attention-mechanisms
 - https://www.evergreeninnovations.co/blog-quantile-loss-function-for-machine-learning/
 - https://arxiv.org/pdf/1912.09363.pdf
-
-# Data research
-
-- Time2Vec: 
-
-- Transformer model: try to enter data, which the decoder translates to predicitons for climate control: say the following: we have 20 ppl in a room, 2 windows are open and they are making a test, this data will be put through the encoder part of the transformer. the Decoder wil output the estimated temprature, CO2 level and humidity percentage.
-
-Sources:
-- https://towardsdatascience.com/the-time-series-transformer-2a521a0efad3
-- https://arxiv.org/pdf/1907.05321.pdf
+- https://arxiv.org/pdf/2002.07845.pdf
