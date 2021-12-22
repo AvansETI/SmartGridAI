@@ -1,24 +1,22 @@
 import glob
 import shutil
 import time
-from datetime import datetime
 
 import cloudpickle
 import luigi
 import pandas as pd
-from sklearn.model_selection import train_test_split
+import shap
+from sklearn.metrics import make_scorer
 from sklearn.utils import shuffle
 from tpot import TPOTClassifier
 
-
-def default_file_name():
-    return datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
+from helpers import get_data_and_split, custom_scoring, default_file_name, custom_scoring_threshold
 
 
 class CombineData(luigi.Task):
     folder_path = luigi.Parameter(default='../datasets/*.csv')
-    output_path = luigi.Parameter(default=f'combined_datasets/{default_file_name()}.csv')
     time = luigi.Parameter(default=time.time())
+    output_path = f'combined_datasets/{default_file_name()}.csv'
 
     def output(self):
         return luigi.LocalTarget(self.output_path)
@@ -26,15 +24,15 @@ class CombineData(luigi.Task):
     def run(self):
         files = glob.glob(self.folder_path)
 
-        csv = pd.concat([pd.read_csv(file, index_col=[0]) for file in files])
+        csv = pd.concat([pd.read_csv(file) for file in files])
 
         csv.to_csv(self.output_path, index=False)
 
 
 class ProcessData(luigi.Task):
-    output_path = luigi.Parameter(default=f'processed_datasets/{default_file_name()}.csv')
     target_name = luigi.Parameter(default='acceptability_90')
     time = luigi.Parameter(default=time.time())
+    output_path = f'processed_datasets/{default_file_name()}.csv'
 
     def requires(self):
         return [CombineData()]
@@ -54,6 +52,7 @@ class ProcessData(luigi.Task):
         df = pd.get_dummies(df, columns=['room'])
 
         drop = [
+            'original_entry_id',
             'node_id',
             'datetime',
             'acceptability_80',
@@ -65,54 +64,90 @@ class ProcessData(luigi.Task):
         ]
 
         df = df.drop(drop, axis=1)
-        df.to_csv(self.output_path)
+        df.to_csv(self.output_path, index=False)
 
 
 class OptimizeModel(luigi.Task):
-    output_path_pipeline = luigi.Parameter(default=f'exported_pipelines/{default_file_name()}.py')
-    output_path_model = luigi.Parameter(default=f'exported_models/{default_file_name()}.pkl')
+    generations = luigi.Parameter(default=10)
     scoring_function = luigi.Parameter(default=None)
-    score_threshold = luigi.FloatParameter(default=99)
     time = luigi.Parameter(default=time.time())
+    output_file = f'exported_models/{default_file_name()}.pkl'
 
     def requires(self):
         return [ProcessData()]
 
+    def output(self):
+        return luigi.LocalTarget(self.output_file)
+
     def run(self):
         file_path = self.input()[0].path
+        X_train, _, y_train, _ = get_data_and_split(file_path)
 
-        df = pd.read_csv(file_path)
+        if self.scoring_function is None:
+            self.scoring_function = make_scorer(custom_scoring, greater_is_better=True)
 
-        y = df['target']
-        X = df.drop('target', axis=1)
-
-        X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y.values, test_size=0.33)
-
-        self.set_status_message('Optimizing model')
         pipeline_optimizer = TPOTClassifier(
-            generations=5,
+            generations=self.generations,
             scoring=self.scoring_function,
             n_jobs=-1,
+            max_eval_time_mins=10,
+            periodic_checkpoint_folder=f'tpot_logs/{default_file_name()}',
             early_stop=3,
-            verbosity=3
+            verbosity=3,
+            log_file=f'tpot_logs/{default_file_name()}.txt',
         )
 
-        self.set_status_message('Fitting model')
         pipeline_optimizer.fit(X_train, y_train)
 
-        self.set_status_message('Scoring model')
-        score = pipeline_optimizer.score(X_test, y_test)
+        pipeline_optimizer.export(f'exported_pipelines/{default_file_name()}.py', data_file_path=file_path)
 
-        self.set_status_message(f'Model score: {score}')
+        with open(self.output_file, 'wb') as file:
+            cloudpickle.dump(pipeline_optimizer.fitted_pipeline_, file)
 
-        if self.score_threshold < (score * 100):
-            pipeline_optimizer.export(self.output_path_pipeline, data_file_path=file_path)
 
-            with open(self.output_path_model, 'wb') as file:
-                cloudpickle.dump(self, file)
+class DeployModel(luigi.Task):
+    time = luigi.Parameter(default=time.time())
 
-            shutil.copy(self.output_path_model, '../api/model.pkl')
+    def requires(self):
+        return [ProcessData(), OptimizeModel()]
+
+    def run(self):
+        data_file_path = self.input()[0].path
+        _, X_test, _, y_test = get_data_and_split(data_file_path)
+
+        model_file_path = self.input()[1].path
+        with open(model_file_path, "rb") as file:
+            model = cloudpickle.load(file)
+
+        passed_threshold = custom_scoring_threshold(model, X_test, y_test)
+
+        if passed_threshold:
+            shutil.copy(model_file_path, '../api/model.pkl')
+
+
+class DeployShap(luigi.Task):
+    time = luigi.Parameter(default=time.time())
+
+    def requires(self):
+        return [ProcessData(), OptimizeModel()]
+
+    def run(self):
+        data_file_path = self.input()[0].path
+        X_train, X_test, _, y_test = get_data_and_split(data_file_path)
+
+        model_file_path = self.input()[1].path
+        with open(model_file_path, "rb") as file:
+            model = cloudpickle.load(file)
+
+        passed_threshold = custom_scoring_threshold(model, X_test, y_test)
+
+        if passed_threshold:
+            explainer = shap.KernelExplainer(model.predict_proba, shap.kmeans(X_train, 15))
+            with open('../api/explainer.pkl', 'wb') as file:
+                cloudpickle.dump(explainer, file)
+
+            pd.DataFrame({"features": X_train.columns}).to_csv("../api/features.csv", index=False)
 
 
 if __name__ == '__main__':
-    luigi.build([OptimizeModel()])
+    luigi.build([DeployModel(), DeployShap()])

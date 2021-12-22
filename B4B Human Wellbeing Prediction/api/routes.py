@@ -7,7 +7,7 @@ import pandas as pd
 
 
 def register(app, schema):
-
+    
     @app.route("/")
     def index():
         return "B4BUX Satisfaction Predictor V1.0"
@@ -44,6 +44,11 @@ def register(app, schema):
             'hour': sensors.get_hour(),
             'minute': sensors.get_minute(),
             'second': sensors.get_second(),
+            '1': sensors.get_state_of_door(),
+            '2': sensors.get_hour(),
+            '3': sensors.get_minute(),
+            '4': sensors.get_second(),
+            '5': sensors.get_second(),
         }
 
         prediction_data = []
@@ -60,4 +65,6 @@ def register(app, schema):
 
         predictions = predictor.predict_model(prediction_data)
 
-        return jsonify(predictions)
+        plot = predictor.plot(prediction_data)
+
+        return jsonify(plot.data)
