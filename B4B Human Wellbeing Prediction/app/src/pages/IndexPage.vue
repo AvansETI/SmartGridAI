@@ -220,7 +220,8 @@
                             <div>Amet assumenda atque autem, blanditiis eaque enim, expedita explicabo fuga itaque labore nemo numquam pariatur praesentium quas quasi, qui quis quos repellendus rerum ut? Expedita nemo possimus quibusdam quis vitae.</div>
                         </div>
 
-                        <AdditiveForceVisualizer v-bind="JSON.parse(prediction.shapOptions)"></AdditiveForceVisualizer>
+                        <AdditiveForceVisualizer v-bind="shapJSON"></AdditiveForceVisualizer>
+
                         <v-skeleton-loader class="my-5" type="image"></v-skeleton-loader>
 
                         <div class="mb-5">
@@ -257,13 +258,13 @@ import { OccupantsActivity } from "@/enums/occupants-activity";
 import { occupantsActivityFilter } from "@/filters/occupants-activity-filter";
 
 // SHAP
-import { AdditiveForceVisualizer } from "shapjs";
+import { AdditiveForceVisualizer, AdditiveForceArrayVisualizer, SimpleListVisualizer } from "shapjs";
 
 
 @Component({
 
     name: "IndexPage",
-    components: { AdditiveForceVisualizer }
+    components: { AdditiveForceVisualizer, AdditiveForceArrayVisualizer, SimpleListVisualizer }
 })
 export default class IndexPage extends Vue {
 
@@ -310,6 +311,11 @@ export default class IndexPage extends Vue {
 
         this.predictionService = new PredictionService(this.$apollo.getClient());
         this.predictionInput = { ...this.emptyPredictionInput };
+    }
+
+    get shapJSON() {
+
+        return JSON.parse(this.prediction.shapOptions);
     }
 
     get meanTempDayColor() {
