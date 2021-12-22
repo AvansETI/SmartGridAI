@@ -14,17 +14,14 @@ class Predictor:
 
             return model
 
-    def load_explainer(self, filename='explainer.pkl'):
-        with open(f"{os.path.dirname(os.path.abspath(__file__))}/{filename}", "rb") as file:
-            explainer = cloudpickle.load(file)
-
-            return explainer
-
     def plot(self, data):
-        df = pd.read_csv(f"{os.path.dirname(os.path.abspath(__file__))}/features.csv", "rb")
+        df = pd.read_csv(f"{os.path.dirname(os.path.abspath(__file__))}/features.csv")
+        X_train = pd.read_csv(f"{os.path.dirname(os.path.abspath(__file__))}/dataset.csv")
         feature_names = df['features']
 
-        explainer = self.load_explainer()
+        model = self.load_model()
+
+        explainer = shap.KernelExplainer(model.predict_proba, shap.kmeans(X_train, 5))
 
         shap_values = explainer.shap_values(data)
 
