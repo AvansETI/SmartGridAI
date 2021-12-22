@@ -7,7 +7,7 @@ import pandas as pd
 
 
 def register(app, schema):
-    
+
     @app.route("/")
     def index():
         return "B4BUX Satisfaction Predictor V1.0"
