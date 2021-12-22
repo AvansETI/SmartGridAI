@@ -15,13 +15,13 @@ class Predictor:
             return model
 
     def load_explainer(self, filename='explainer.pkl'):
-        with open(filename, "rb") as file:
+        with open(f"{os.path.dirname(os.path.abspath(__file__))}/{filename}", "rb") as file:
             explainer = cloudpickle.load(file)
 
             return explainer
 
     def plot(self, data):
-        df = pd.read_csv('features.csv')
+        df = pd.read_csv(f"{os.path.dirname(os.path.abspath(__file__))}/features.csv", "rb")
         feature_names = df['features']
 
         explainer = self.load_explainer()
