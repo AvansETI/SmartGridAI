@@ -257,8 +257,6 @@
 
                         <AdditiveForceVisualizer v-bind="shapJSON"></AdditiveForceVisualizer>
 
-                        <v-skeleton-loader class="my-5" type="image"></v-skeleton-loader>
-
                         <div class="mb-5">
                             <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut dolor earum est odit porro quae, qui quis ullam! Ab atque, et iure iusto nulla obcaecati porro quia quod ratione recusandae.</div>
                             <div>Accusamus accusantium architecto asperiores blanditiis cupiditate delectus deleniti eaque fugiat in laboriosam maiores nesciunt, numquam officia possimus quibusdam quidem quis quisquam reprehenderit sapiente, soluta suscipit tempore temporibus vel veniam veritatis.</div>
