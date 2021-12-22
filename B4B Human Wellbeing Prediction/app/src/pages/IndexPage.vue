@@ -156,7 +156,7 @@
                                                                 vid="temperature" name="temperature"
                                                                 rules="min_value:-10|max_value:100" v-slot="{ errors }"
                                                             >
-                                                                <v-slider name="temperature" :color="temperatureColor" min="-10" max="50" step="0.5" label="Temperature" :disabled="shouldDisable" prepend-icon="mdi-thermometer-lines" v-model.number="predictionInput.temperature" :error-messages="errors">
+                                                                <v-slider name="temperature" :color="temperatureColor" min="-10" max="50" step="0.5" label="Temperature" :disabled="shouldDisable" prepend-icon="mdi-home-thermometer" v-model.number="predictionInput.temperature" :error-messages="errors">
                                                                     <template v-slot:append>
                                                                         <h3 :style="`color: ${ temperatureColor };`">{{ predictionInput.temperature.toFixed(1) }}&deg;</h3>
                                                                     </template>
@@ -172,6 +172,41 @@
                                                                         <h3 :style="`color: ${ meanTempDayColor };`">{{ predictionInput.mean_temp_day.toFixed(1) }}&deg;</h3>
                                                                     </template>
                                                                 </v-slider>
+                                                            </ValidationProvider>
+
+                                                            <ValidationProvider
+                                                                vid="relative_humidity" name="relative_humidity"
+                                                                rules="min_value:0|max_value:100" v-slot="{ errors }"
+                                                            >
+                                                                <v-slider name="relative_humidity" min="0" max="100" step="0.1" label="Humidity Percentage" :disabled="shouldDisable" prepend-icon="mdi-water-percent" v-model.number="predictionInput.relative_humidity" :error-messages="errors">
+                                                                    <template v-slot:append>
+                                                                        <h3>{{ predictionInput.relative_humidity.toFixed(1) }}%</h3>
+                                                                    </template>
+                                                                </v-slider>
+                                                            </ValidationProvider>
+
+                                                            <ValidationProvider
+                                                                vid="light_sensor_one_wave_length" name="light_sensor_one_wave_length"
+                                                                rules="min_value:0|max_value:2147483647" v-slot="{ errors }"
+                                                            >
+                                                                <v-text-field
+                                                                    name="light_sensor_one_wave_length" type="number" :disabled="shouldDisable" prepend-icon="mdi-leak"
+                                                                    min="0" max="2147483647" step="0.1" label="Light Sensor One Wavelength"
+                                                                    v-model.number="predictionInput.light_sensor_one_wave_length" :error-messages="errors"
+                                                                >
+                                                                </v-text-field>
+                                                            </ValidationProvider>
+
+                                                            <ValidationProvider
+                                                                vid="light_sensor_two_wave_length" name="light_sensor_two_wave_length"
+                                                                rules="min_value:0|max_value:2147483647" v-slot="{ errors }"
+                                                            >
+                                                                <v-text-field
+                                                                    name="light_sensor_two_wave_length" type="number" :disabled="shouldDisable" prepend-icon="mdi-leak"
+                                                                    min="0" max="2147483647" step="0.1" label="Light Sensor Two Wavelength"
+                                                                    v-model.number="predictionInput.light_sensor_two_wave_length" :error-messages="errors"
+                                                                >
+                                                                </v-text-field>
                                                             </ValidationProvider>
                                                         </v-col>
                                                     </v-row>
@@ -286,21 +321,25 @@ export default class IndexPage extends Vue {
                 "window_state", "state_of_door",
                 "room"
             ],
+
             emptyPredictionInput: {
-
-                number_of_occupants: 1,
-                activity_of_occupants: 0,
-
-                window_state: false,
-                state_of_door: false,
-
-                room: null,
 
                 temperature: 21.5,
                 mean_temp_day: 9.5,
 
+                relative_humidity: 0,
+
+                light_sensor_one_wave_length: 0,
+                light_sensor_two_wave_length: 0,
+
+                number_of_occupants: 1,
+                activity_of_occupants: 0,
+
+                state_of_door: false,
+                window_state: false,
+
                 time: null,
-                head_index: null,
+                room: null,
             },
 
             predictionInput: {}
@@ -440,11 +479,6 @@ export default class IndexPage extends Vue {
             this.predictionInput.hour = parseInt(timeMap[0]);
             this.predictionInput.minute = parseInt(timeMap[1]);
             this.predictionInput.second = parseInt(timeMap[2]);
-        }
-
-        if (this.predictionInput.temperature != null) {
-
-            this.predictionInput.heat_index = 0; //@TODO: CALCULATE
         }
 
         delete this.predictionInput.time;

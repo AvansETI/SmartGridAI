@@ -1,10 +1,9 @@
-import os
 import json
 import sensors
 import pandas as pd
 from random import choice
-import cloudpickle as pickle
 from predictor import Predictor
+from utils import calculate_heat_index
 
 
 def register(query):
@@ -13,7 +12,18 @@ def register(query):
         prediction_data = {
             "temperature": (input["temperature"] if "temperature" in input else sensors.get_temperature()),
             "mean_temp_day": (input["mean_temp_day"] if "mean_temp_day" in input else sensors.get_mean_temp_day()),
-            "heat_index": (input["heat_index"] if "heat_index" in input else sensors.get_heat_index()),
+            "heat_index": (
+                input["heat_index"]
+                if "heat_index" in input
+                else (
+                    calculate_heat_index(input["temperature"], input["relative_humidity"])
+                    if (
+                        "temperature" in input
+                        and "relative_humidity" in input
+                    )
+                    else sensors.get_heat_index()
+                )
+            ),
             "relative_humidity": (
                 input["relative_humidity"]
                 if "relative_humidity" in input
@@ -65,10 +75,6 @@ def register(query):
             prediction_data[f"room_{choice(['A', 'B', 'C'])}"] = 1
 
         predictor = Predictor()
-
-        with open(f"{os.path.dirname(os.path.abspath(__file__))}/shap_data.pkl", "rb") as f:
-            shap = pickle.load(f)
-
         prediction_df = pd.DataFrame([list(prediction_data.values())])
 
         return {
