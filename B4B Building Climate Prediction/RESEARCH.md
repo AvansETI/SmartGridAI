@@ -53,7 +53,7 @@ This is where the 'magic' happens. There are multiple layers in the Temporal Fus
 
 #### 4.2.1 Locality Enhancement with Sequence-to-Sequence Layer
 
-?
+In time series data, important data points are often identified by the relation they have with the surounding values. For example: anomalies, change-points or cyclical patterns. By leveraging local context (through feature construction that utilizes pattern info on top of point-wise values) it is possible to achieve preformance improvements in attention-based architecture. The way the TFT does this is by uitilizing a sequence to sequence model. This generates a set of uniform temporal features which serve as inputs into the temporal fusion decoder itself. 
 
 #### 4.2.2 Static Enrichment Layer
 
@@ -68,9 +68,13 @@ After the enrichment, self attention with IMHA is applied. decoder masking is ap
 We apply an additional non-linear processing to the outputs of the selfattention layer. Similar to the static enrichment layer, this makes use of  GRNs: $ψ(t, n) = GRN_{ψ} (δ(t, n))$ where the weights of $GRN_{ψ}$ are shared across the entire layer. As per Fig. 2, we also apply a gated residual connection which skips over the entire transformer block, providing a direct path to the sequence-to-sequence layer – yielding a
 simpler model if additional complexity is not required, as shown here: $\widetilde{ψ}(t, n) = LayerNorm(\widetilde{φ}(t, n) + GLU\widetilde{ψ}(ψ(t, n)))$
 
-## 5. Prediction intervals
+#### 4.2.5 Quantile outputs
 
-Before we explain the output/prediction intervals of the model, we first need to understand what quantiles are and what quantile regression is.
+The TFT predicts intervals on top of point forecasts, by prediciting various percentiles simultaneously at a given time step. These forecasts are only generated for horizons in the future. 
+
+## 5. Loss function
+
+Before we explain the loss function of the model, we first need to understand what quantiles are and what quantile regression is.
 
 Quantile: a quantile defines a particular part of a data set. It determines how many values in a distribution are above or below a certain limit. For example, if you have a dataset of 15 points in a linear fasion, a line could be drawn on the 8th point. This line will then be the 50% quantile or the 0.5 quantile (See figure 2). 
 
@@ -86,7 +90,9 @@ For a set of predictions, the loss will be the average.
 
 In the regression loss equation above, as q has a value between 0 and 1, the first term will be positive and dominate when over predicting, $y^{i}_{p} > y_{i}$, and the second term will dominate when under-predicting, $y^{i}_{p} < y_{i}$. For q equal to 0.5, under-prediction and over-prediction will be penalized by the same factor, and the median is obtained. The larger the value of $q$, the more over-predictions are penalized compared to under-predictions. For $q$ equal to 0.75, over-predictions will be penalized by a factor of 0.75, and under-predictions by a factor of 0.25. The model will then try to avoid over-predictions approximately three times as hard as under-predictions, and the 0.75 quantile will be obtained.
 
-Now that we have a clear understanding of these, we can start explaining the quantile forcasting and the TFT's loss function.
+TFT is trained by jointly minimizing the quantile loss, summed across all quantile outputs:
+$L(Ω,W) = \sum _{{y_{t}∈ Ω }} \sum _{q∈Q} \sum ^{τ_{max}}_{τ=1} \dfrac {QL(yt, yˆ(q, t − τ, τ ), q)}{Mτ_{max}}$
+where $Ω$ is the domain of training data containing $M$ samples, $W$ represents the weights of TFT and $Q$ is the set of output quantiles.
 
 ## Sources: 
 - https://arxiv.org/pdf/1706.03762.pdf
@@ -100,3 +106,4 @@ Now that we have a clear understanding of these, we can start explaining the qua
 - https://www.evergreeninnovations.co/blog-quantile-loss-function-for-machine-learning/
 - https://arxiv.org/pdf/1912.09363.pdf
 - https://arxiv.org/pdf/2002.07845.pdf
+- https://arxiv.org/pdf/1711.11053.pdf
