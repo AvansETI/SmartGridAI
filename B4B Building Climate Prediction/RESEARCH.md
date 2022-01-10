@@ -11,6 +11,10 @@
 
 # Temporal Fusion Transformer (TFT)
 
+## Introduction
+
+The objective of the B4B climate prediction team is to build/find and train a machine learning model that can predict the internal climate of a building. An important factor in this equation is time, since time is intertwined with a lot of variables like the amount of people that are in the building at any given time, or the seasons and thus the outside temprature. Thus Timeseries data has to be used to make acurate predictions of the future state of the building climate. Our predecessors tried to do this with the help of LSTM's, but have been unsucessfull in producing an acurate prediction model. After researching subquestion number 5 (Which ML algorithms should be used to perform prediction of these timeseries measurements?) Our team came across the Temporal Fusion Transformer. After a few test runs with the model we managed to create a good prediction model that could acurately predicit future timesteps, but the inner workings of this model were still unknown. This begs the following question: What is a TFT model, and how does it predict future Timesteps?
+
 For the forcast predictions we used a (at this time) state of the art model specifically build for TimeSeries predicitions, The Temporal Fusion Transformer. The TFT specializes on Multi-Horizon forcasting (a model capable of predicting multiple attributes at once) which is needed for the predicting a climate within a building, since the climate is defined by more than one variable. In this document, we will shortly discuss the architecture of this model. This document is not a replacement for the TFT paper. Please read and research the sources given if you require a full understanding of this model and how it operates.
 
 Below you can see the architecture of the TFT, with an explanation on how it works just below it.
@@ -93,6 +97,10 @@ In the regression loss equation above, as q has a value between 0 and 1, the fir
 TFT is trained by jointly minimizing the quantile loss, summed across all quantile outputs:
 $L(Ω,W) = \sum _{{y_{t}∈ Ω }} \sum _{q∈Q} \sum ^{τ_{max}}_{τ=1} \dfrac {QL(yt, yˆ(q, t − τ, τ ), q)}{Mτ_{max}}$
 where $Ω$ is the domain of training data containing $M$ samples, $W$ represents the weights of TFT and $Q$ is the set of output quantiles.
+
+## Conclusion
+
+At the beginning of this research document we asked the following question: What is a TFT model, and how does it predict future Timesteps? The TFT model is an attention-based architecture that combines high-performance multi-horizon forecasting with interpretable insights into temporal dynamics. To learn temporal relationships at different scales, TFT uses recurrent layers for local processing and interpretable self-attention layers for long-term dependencies. TFT utilizes specialized components to select relevant features and a series of gating layers to suppress unnecessary components, enabling high performance in a wide range of scenarios.
 
 ## Sources: 
 - https://arxiv.org/pdf/1706.03762.pdf
