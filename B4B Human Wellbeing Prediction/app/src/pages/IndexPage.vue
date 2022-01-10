@@ -2,7 +2,12 @@
     <div class="index page">
         <div class="page-title fill-width mb-12">
             <div class="page-title-inner fill-width fill-height d-flex flex-column align-center">
-                <h2 class="display-1 mb-3 text-center">Brains For Buildings - Satisfaction Predictor</h2>
+                <h2 class="display-1 mb-3 text-center" style="position: relative;">
+                    Brains For Buildings - Satisfaction Predictor
+                    <v-btn color="info" class="ml-1" icon @click="showOnboardingDialog = true" style="position: absolute; top: -20%">
+                        <v-icon>mdi-information</v-icon>
+                    </v-btn>
+                </h2>
                 <p class="text-center">This application can be used to predict whether or not the occupants of a room would be comfortable in it's climate.</p>
             </div>
         </div>
@@ -23,9 +28,7 @@
                                         <v-card-text>
                                             <ValidationObserver ref="basicValidationObserver" v-slot="{ handleSubmit }" class="basic-form-holder">
                                                 <v-form @submit.prevent="handleSubmit(() => predict(false))">
-
                                                     <v-row>
-
                                                         <v-col cols="12" md="6">
                                                             <ValidationProvider
                                                                 vid="number_of_occupants" name="number_of_occupants"
@@ -75,7 +78,6 @@
                                                     <div class="d-flex justify-end">
                                                         <v-btn :disabled="shouldDisable" :loading="predicting" color="primary" type="submit">Predict</v-btn>
                                                     </div>
-
                                                 </v-form>
                                             </ValidationObserver>
                                         </v-card-text>
@@ -233,7 +235,7 @@
                                         The {{ predictionInput.number_of_occupants }} {{ activityOfOccupantsItems.find(ao => ao.value === predictionInput.activity_of_occupants).text.toLowerCase() }} <span :class="predictionDisplayClass">{{ prediction.satisfaction >= satisfied ? "comfortably" : "uncomfortably" }}</span>.
                                     </span>
                                     <span class="text-h4" v-else>
-                                        The {{ predictionInput.number_of_occupants }} occupant(s) will be <span :class="predictionDisplayClass">{{ prediction.satisfaction >= satisfied ? "comfortable" : "uncomfortable" }}</span>.
+                                        The {{ predictionInput.number_of_occupants }} occupant(s) will feel <span :class="predictionDisplayClass">{{ prediction.satisfaction >= satisfied ? "comfortable" : "uncomfortable" }}</span>.
                                     </span>
                                 </v-card-title>
                                 <v-card-text class="d-flex align-center justify-center">
@@ -249,30 +251,99 @@
                         <v-divider class="my-7"></v-divider>
 
                         <div class="mb-5">
-                            <h3 class="text-h6 mb-2">Why will they be {{ prediction.satisfaction >= satisfied ? "comfortable" : "uncomfortable" }}?</h3>
-                            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur assumenda ea eius in ipsum nulla recusandae! Cum fugiat id laudantium modi molestiae quae reiciendis totam veritatis. Beatae earum omnis possimus.</div>
-                            <div>Accusantium quibusdam quidem quod repellat vel veniam vero voluptas. Aliquam debitis iure libero modi nostrum nulla praesentium repudiandae similique! A ab autem consequatur deleniti hic iure, laborum neque nostrum praesentium.</div>
-                            <div>Amet assumenda atque autem, blanditiis eaque enim, expedita explicabo fuga itaque labore nemo numquam pariatur praesentium quas quasi, qui quis quos repellendus rerum ut? Expedita nemo possimus quibusdam quis vitae.</div>
+                            <h3 class="text-h6 mb-2">Why will they feel {{ prediction.satisfaction >= satisfied ? "comfortable" : "uncomfortable" }}?</h3>
+
+                            <p>
+                                Based on the data you have provided, we predict the room to be {{ prediction.satisfaction >= satisfied ? "comfortable" : "uncomfortable" }}.
+                                The most important features/input you have provided was {{ impactFeatures.slice(0, 2).map(([name]) => name).join(" and ") }}.
+                                We are {{ confidenceDisplay }} that this prediction is right.
+                            </p>
+
+                            <template v-if="prediction.satisfaction < satisfied">
+                                <p>
+                                    To increase the comfort of the room, you could try any or all of the tips below:
+                                </p>
+
+                                <ol>
+                                    <template v-for="[feature, effect] of impactFeatures.slice(0, 2)">
+                                        <li v-for="tip of (impactFeatureTips[feature] != null ? impactFeatureTips[feature](effect) : [])">{{ tip }}</li>
+                                    </template>
+                                </ol>
+                            </template>
                         </div>
 
                         <AdditiveForceVisualizer v-bind="shapJSON"></AdditiveForceVisualizer>
 
                         <div class="mb-5">
-                            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut dolor earum est odit porro quae, qui quis ullam! Ab atque, et iure iusto nulla obcaecati porro quia quod ratione recusandae.</div>
-                            <div>Accusamus accusantium architecto asperiores blanditiis cupiditate delectus deleniti eaque fugiat in laboriosam maiores nesciunt, numquam officia possimus quibusdam quidem quis quisquam reprehenderit sapiente, soluta suscipit tempore temporibus vel veniam veritatis.</div>
-                            <div>Ab dolores excepturi fuga nostrum ut. Alias consectetur cumque deleniti dolorem et ex, facere harum id labore maiores molestiae molestias necessitatibus nesciunt nisi, odit porro quos recusandae reprehenderit similique vel?</div>
+                            <p>
+                                The bar in the graph above shows you how far your prediction is from the mean prediction and what inputs have the highest impact on that prediction.
+                                The output value is the prediction result, in your case that would be {{ prediction.satisfaction >= satisfied ? "comfortable" : "uncomfortable" }}.
+                                The base value is the mean prediction and our reference point, it shows the impact off the provided features/data in the prediction, a higher red bar pushes further away from the mean, a blue bar pushes further back to the mean.
+                            </p>
                         </div>
 
                         <div class="mb-5">
                             <h3 class="text-h6 mb-2">Disclaimer</h3>
-                            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A alias animi assumenda aut blanditiis cupiditate eaque est, expedita impedit laboriosam laudantium molestias neque non nulla placeat praesentium quia quisquam voluptas.</div>
-                            <div>Aliquid animi commodi, debitis deleniti deserunt dignissimos dolorem incidunt ipsam minima mollitia nulla obcaecati, quibusdam quod repudiandae, rerum sed sequi ut. Dolorem dolores ducimus magni nisi odit quam rerum suscipit!</div>
-                            <div>Aperiam aut consectetur debitis delectus deleniti dignissimos, dolores doloribus, ea, eos est eum harum hic in inventore ipsam maiores nam nihil non numquam pariatur perferendis quasi quisquam repellendus saepe vel?</div>
+                            <p>
+                                The prediction is based on an AI that has been trained on the Avans climate, combined with the current climate which is gathered by sensors in the room it will try to predict that satisfaction.
+                                Even though our model is well-trained, the predictions can still be off.
+                            </p>
                         </div>
                     </div>
                 </v-expand-transition>
             </v-col>
         </v-row>
+
+        <v-dialog
+            v-model="showOnboardingDialog"
+            :max-width="$vuetify.breakpoint.smAndDown ? '100vw' : '50vw'"
+        >
+            <v-card>
+                <v-card-title class="text-h5">
+                    Welcome to the Brains for Buildings - Satisfaction Predictor
+                </v-card-title>
+                <v-card-text>
+                    <p>
+                        Welcome to the brains4buildings satisfaction predictor, here you can figure out whether students will end up being satisfied in a certain classroom, currently or in the future.
+                        The prediction is based on an AI that has been trained on the Avans climate, combined with the current climate which is gathered by sensors in the room it will try to predict that satisfaction.
+                        Even though our model is well-trained, the predictions can still be off.
+                    </p>
+                    <p>
+                        For general predictions we recommend the standard basic form, the advanced tab should only be used by experts.
+                        If you don't know exactly know some of the data, you can just leave them empty, and it will gather the data from the current Avans climate.
+                        To give further context, this is how we define human satisfaction, "A person's feelings of fulfillment or disappointment".
+                    </p>
+                </v-card-text>
+                <v-card-actions>
+                    <v-row no-gutters align="center" justify="end">
+                        <v-col cols="12" md="4" class="d-flex align-center justify-center justify-md-start">
+                            <v-btn
+                                text :block="$vuetify.breakpoint.smAndDown"
+                                @click="showOnboardingDialog = false"
+                            >
+                                Close
+                            </v-btn>
+                        </v-col>
+                        <v-col cols="12" md="4" class="d-flex align-center justify-center justify-md-end">
+                            <v-btn
+                                color="green darken-1" text :block="$vuetify.breakpoint.smAndDown"
+                                @click="() => { showOnboardingDialog = false; tab = 0; }"
+                            >
+                                Use basic form
+                            </v-btn>
+                        </v-col>
+                        <v-col cols="12" md="4" class="d-flex align-center justify-center justify-md-end">
+                            <v-btn
+                                color="green darken-1" text :block="$vuetify.breakpoint.smAndDown"
+                                @click="() => { showOnboardingDialog = false; tab = 1; }"
+                            >
+                                Use advanced form
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -313,6 +384,26 @@ export default class IndexPage extends Vue {
             predicting: false,
             prediction: null,
 
+            //@TODO: Get from API??
+            impactFeatureTips: {
+
+                temperature(effect) {
+
+                    return (
+
+                        effect > 0
+                        ? [
+                            "Open a door and/or window",
+                        ]
+                        : [
+                            "Close a door and/or window",
+                        ]
+                    )
+                }
+            },
+
+            showOnboardingDialog: false,
+
             basicFields: [
                 "number_of_occupants",
                 "activity_of_occupants",
@@ -325,10 +416,10 @@ export default class IndexPage extends Vue {
                 temperature: 21.5,
                 mean_temp_day: 9.5,
 
-                relative_humidity: 0,
+                relative_humidity: 47.49199662300799,
 
-                light_sensor_one_wave_length: 0,
-                light_sensor_two_wave_length: 0,
+                light_sensor_one_wave_length: 221.7881322071674, //@TODO
+                light_sensor_two_wave_length: 756.4842621630069, //@TODO
 
                 number_of_occupants: 1,
                 activity_of_occupants: 0,
@@ -348,6 +439,54 @@ export default class IndexPage extends Vue {
 
         this.predictionService = new PredictionService(this.$apollo.getClient());
         this.predictionInput = { ...this.emptyPredictionInput };
+
+        if (localStorage.getItem("ONBOARDING_COMPLETED") !== "true") {
+
+            this.showOnboardingDialog = true;
+            localStorage.setItem("ONBOARDING_COMPLETED", "true");
+        }
+    }
+
+    get confidenceDisplay() {
+
+        if (this.prediction?.probability >= 0.95) {
+
+            return "fairly confident";
+        }
+        else if(this.prediction?.probability >= 0.85) {
+
+            return "mostly confident";
+        }
+        else {
+
+            return "not confident";
+        }
+    }
+
+    get impactFeatures() {
+
+        return (
+
+            Object.entries(this.shapJSON.features)
+            .map(
+
+                ([index, data]) => {
+
+                    return [
+
+                        this.shapJSON.featureNames[parseInt(index)],
+                        data.effect
+                    ];
+                }
+            )
+            .sort(
+
+                ([, a], [, b]) => {
+
+                    return a - b;
+                }
+            )
+        );
     }
 
     get shapJSON() {

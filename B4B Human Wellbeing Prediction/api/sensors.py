@@ -1,5 +1,6 @@
 from time import time
 
+# @TODO: Functions could return live SendLab data from graphana...
 
 def get_temperature():
     return 21.961956170634103

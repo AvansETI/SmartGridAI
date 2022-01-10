@@ -11,6 +11,7 @@ type Query {
 type PredictionResponse {
 
     satisfaction: Int!,
+    probability: Float!,
     shapOptions: String
 }
 

@@ -79,6 +79,6 @@ def register(query):
 
         return {
 
-            "satisfaction": predictor.predict_model(prediction_df),
+            **(predictor.predict_model_proba(prediction_df)),
             "shapOptions": json.dumps(predictor.plot(prediction_df).data)
         }

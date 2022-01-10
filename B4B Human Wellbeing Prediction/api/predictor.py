@@ -8,6 +8,14 @@ class Predictor:
     def predict_model(self, data):
         return self.load_model().predict(data)[0]
 
+    def predict_model_proba(self, data):
+        prediction = self.load_model().predict(data)[0]
+        proba = self.load_model().predict_proba(data)[0]
+        return {
+            "satisfaction": prediction,
+            "probability": proba[0] if (prediction < 1) else proba[1]
+        }
+
     def load_model(self, filename='model.pkl'):
         with open(f"{os.path.dirname(os.path.abspath(__file__))}/{filename}", "rb") as file:
             model = cloudpickle.load(file)
