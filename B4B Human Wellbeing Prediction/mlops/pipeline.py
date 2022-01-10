@@ -5,7 +5,6 @@ import time
 import cloudpickle
 import luigi
 import pandas as pd
-import shap
 from sklearn.metrics import make_scorer
 from sklearn.utils import shuffle
 from tpot import TPOTClassifier
@@ -142,10 +141,7 @@ class DeployShap(luigi.Task):
         passed_threshold = custom_scoring_threshold(model, X_test, y_test)
 
         if passed_threshold:
-            explainer = shap.KernelExplainer(model.predict_proba, shap.kmeans(X_train, 15))
-            with open('../api/explainer.pkl', 'wb') as file:
-                cloudpickle.dump(explainer, file)
-
+            X_train.to_csv("../api/dataset.csv", index=False)
             pd.DataFrame({"features": X_train.columns}).to_csv("../api/features.csv", index=False)
 
 
