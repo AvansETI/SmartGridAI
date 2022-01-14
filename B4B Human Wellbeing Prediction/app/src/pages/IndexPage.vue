@@ -169,7 +169,7 @@
                                                                 vid="mean_temp_day" name="mean_temp_day"
                                                                 rules="min_value:-10|max_value:100" v-slot="{ errors }"
                                                             >
-                                                                <v-slider name="mean_temp_day" :color="temperatureColor" min="-10" max="50" step="0.5" label="Mean Outside Temperature" :disabled="shouldDisable" prepend-icon="mdi-thermometer-lines" v-model.number="predictionInput.mean_temp_day" :error-messages="errors">
+                                                                <v-slider name="mean_temp_day" :color="meanTempDayColor" min="-10" max="50" step="0.5" label="Mean Outside Temperature" :disabled="shouldDisable" prepend-icon="mdi-thermometer-lines" v-model.number="predictionInput.mean_temp_day" :error-messages="errors">
                                                                     <template v-slot:append>
                                                                         <h3 :style="`color: ${ meanTempDayColor };`">{{ predictionInput.mean_temp_day.toFixed(1) }}&deg;</h3>
                                                                     </template>
@@ -255,8 +255,8 @@
 
                             <p>
                                 Based on the data you have provided, we predict the room to be {{ prediction.satisfaction >= satisfied ? "comfortable" : "uncomfortable" }}.
-                                The most important features/input you have provided was {{ impactFeatures.slice(0, 2).map(([name]) => name).join(" and ") }}.
-                                We are {{ confidenceDisplay }} that this prediction is right.
+                                The most important features/inputs you have provided were {{ impactFeatures.slice(0, 2).map(([name]) => name).join(" and ") }}.
+                                We are {{ confidenceDisplay }} that this prediction is correct.
                             </p>
 
                             <template v-if="prediction.satisfaction < satisfied">
@@ -276,9 +276,9 @@
 
                         <div class="mb-5">
                             <p>
-                                The bar in the graph above shows you how far your prediction is from the mean prediction and what inputs have the highest impact on that prediction.
-                                The output value is the prediction result, in your case that would be {{ prediction.satisfaction >= satisfied ? "comfortable" : "uncomfortable" }}.
-                                The base value is the mean prediction and our reference point, it shows the impact off the provided features/data in the prediction, a higher red bar pushes further away from the mean, a blue bar pushes further back to the mean.
+                                The bar in the graph above shows you how far your prediction is from the mean prediction and what data inputs have the highest impact on that prediction.
+                                The two colors push against each other, a red bar means a negative impact(uncomfortable) and a green bar means a positive impact(comfortable).
+                                If the majority of the bar is green, then the prediction would be comfortable. If the majority of the bar is red, it will be uncomfortable.
                             </p>
                         </div>
 
@@ -411,6 +411,7 @@ export default class IndexPage extends Vue {
                 "room"
             ],
 
+            //@TODO: Get defaults from API??
             emptyPredictionInput: {
 
                 temperature: 21.5,
@@ -418,8 +419,8 @@ export default class IndexPage extends Vue {
 
                 relative_humidity: 47.49199662300799,
 
-                light_sensor_one_wave_length: 221.7881322071674, //@TODO
-                light_sensor_two_wave_length: 756.4842621630069, //@TODO
+                light_sensor_one_wave_length: 221.7881322071674,
+                light_sensor_two_wave_length: 756.4842621630069,
 
                 number_of_occupants: 1,
                 activity_of_occupants: 0,
@@ -599,6 +600,7 @@ export default class IndexPage extends Vue {
     get predictionDisplayClass() {
 
         return {
+
             "error--text": (this.prediction.satisfaction < this.satisfied),
             "success--text": (this.prediction.satisfaction >= this.satisfied)
         };
@@ -634,6 +636,7 @@ export default class IndexPage extends Vue {
                 )
             }
         });
+
         this.predicting = false;
 
         this.$nextTick(() => {
