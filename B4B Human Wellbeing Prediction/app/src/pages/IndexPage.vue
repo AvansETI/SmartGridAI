@@ -265,8 +265,8 @@
                                 </p>
 
                                 <ol>
-                                    <template v-for="[feature, effect] of impactFeatures.slice(0, 2)">
-                                        <li v-for="tip of (impactFeatureTips[feature] != null ? impactFeatureTips[feature](effect) : [])">{{ tip }}</li>
+                                    <template v-for="[feature, data] of impactFeatures.slice(0, 2)">
+                                        <li v-for="tip of (impactFeatureTips[feature] != null ? impactFeatureTips[feature](data) : [])">{{ tip }}</li>
                                     </template>
                                 </ol>
                             </template>
@@ -387,16 +387,65 @@ export default class IndexPage extends Vue {
             //@TODO: Get from API??
             impactFeatureTips: {
 
-                temperature(effect) {
+                temperature({ effect, value }) {
 
                     return (
 
-                        effect > 0
+                        (value * effect) < 0
                         ? [
                             "Open a door and/or window",
+                            "Turn on the ac"
                         ]
                         : [
                             "Close a door and/or window",
+                            "Turn off the ac"
+                        ]
+                    )
+                },
+
+                mean_temp_day({ effect, value }) {
+
+                    return (
+
+                        (value * effect) < 0
+                        ? [
+                            "Change into lighter clothes"
+                        ]
+                        : [
+                            "Change into warmer clothes",
+                        ]
+                    )
+                },
+
+                heatindex({ effect, value }) {
+
+                    return (
+
+                        (value * effect) < 0
+                        ? [
+                            "Open a door and/or window",
+                            "Turn on the ac",
+                            "Change into lighter clothes"
+                        ]
+                        : [
+                            "Change into warmer clothes",
+                            "Close a door and/or window",
+                            "Turn off the ac"
+                        ]
+                    )
+                },
+
+                relative_humidity({ effect, value }) {
+
+                    return (
+
+                        (value * effect) < 0
+                        ? [
+                            "Turn on the ac",
+
+                        ]
+                        : [
+                            "Turn off the ac",
                         ]
                     )
                 }
@@ -476,7 +525,7 @@ export default class IndexPage extends Vue {
                     return [
 
                         this.shapJSON.featureNames[parseInt(index)],
-                        data.effect
+                        data
                     ];
                 }
             )
@@ -484,7 +533,7 @@ export default class IndexPage extends Vue {
 
                 ([, a], [, b]) => {
 
-                    return a - b;
+                    return a.effect - b.effect;
                 }
             )
         );
