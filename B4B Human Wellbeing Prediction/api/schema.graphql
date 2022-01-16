@@ -1,0 +1,42 @@
+schema {
+
+    query: Query
+}
+
+type Query {
+
+    predict(input: PredictionInput!): PredictionResponse
+}
+
+type PredictionResponse {
+
+    satisfaction: Int!,
+    probability: Float!,
+    shapOptions: String
+}
+
+input PredictionInput {
+
+    temperature: Float,
+    mean_temp_day: Float,
+    heat_index: Float,
+
+    relative_humidity: Float,
+
+    light_sensor_one_wave_length: Float,
+    light_sensor_two_wave_length: Float,
+
+    number_of_occupants: Int,
+    activity_of_occupants: Int,
+
+    state_of_door: Boolean,
+
+    hour: Int,
+    minute: Int,
+    second: Int,
+
+    window_state: Boolean,
+    room: Int,
+
+    relative_time: Float
+}

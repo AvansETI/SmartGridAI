@@ -1,5 +1,6 @@
-import pandas as pd
+import os
 import shap
+import pandas as pd
 from cloudpickle import cloudpickle
 
 
@@ -7,23 +8,28 @@ class Predictor:
     def predict_model(self, data):
         return self.load_model().predict(data)[0]
 
+    def predict_model_proba(self, data):
+        prediction = self.load_model().predict(data)[0]
+        proba = self.load_model().predict_proba(data)[0]
+        return {
+            "satisfaction": prediction,
+            "probability": proba[0] if (prediction < 1) else proba[1]
+        }
+
     def load_model(self, filename='model.pkl'):
-        with open(filename, "rb") as file:
+        with open(f"{os.path.dirname(os.path.abspath(__file__))}/{filename}", "rb") as file:
             model = cloudpickle.load(file)
 
             return model
 
-    def load_explainer(self, filename='explainer.pkl'):
-        with open(filename, "rb") as file:
-            explainer = cloudpickle.load(file)
-
-            return explainer
-
     def plot(self, data):
-        df = pd.read_csv('features.csv')
+        df = pd.read_csv(f"{os.path.dirname(os.path.abspath(__file__))}/features.csv")
+        X_train = pd.read_csv(f"{os.path.dirname(os.path.abspath(__file__))}/dataset.csv")
         feature_names = df['features']
 
-        explainer = self.load_explainer()
+        model = self.load_model()
+
+        explainer = shap.KernelExplainer(model.predict_proba, shap.kmeans(X_train, 5))
 
         shap_values = explainer.shap_values(data)
 

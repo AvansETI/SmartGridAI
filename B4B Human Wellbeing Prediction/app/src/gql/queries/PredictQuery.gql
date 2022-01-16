@@ -1,0 +1,9 @@
+query PredictQuery($input: PredictionInput!) {
+
+    predict(input: $input) {
+
+        satisfaction
+        probability
+        shapOptions
+    }
+}

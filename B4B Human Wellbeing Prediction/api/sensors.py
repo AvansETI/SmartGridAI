@@ -1,3 +1,7 @@
+from time import time
+
+# @TODO: Functions could return live SendLab data from graphana...
+
 def get_temperature():
     return 21.961956170634103
 
@@ -44,3 +48,11 @@ def get_minute():
 
 def get_second():
     return 29.444599636323936
+
+
+def get_window_state():
+    return 0
+
+
+def get_relative_time():
+    return time()

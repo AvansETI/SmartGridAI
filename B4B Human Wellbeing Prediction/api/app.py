@@ -1,54 +1,29 @@
-import pandas as pd
-from flask import Flask, request, jsonify
+import os
 
-import sensors
-from predictor import Predictor
+from flask import Flask
+from flask_cors import CORS
 
+from routes import register as register_http
+from queries import register as register_graphql
+
+from ariadne import load_schema_from_path, make_executable_schema, ObjectType
+
+# Create Application
 app = Flask(__name__)
+CORS(app)
 
+# Map GraphQL Resolvers
+query = ObjectType("Query")
+register_graphql(query)
 
-@app.route('/predict', methods=['POST'])
-def index():
-    json = request.get_json()
+# Load Schema
+type_defs = load_schema_from_path(f"{os.path.dirname(os.path.abspath(__file__))}/schema.graphql")
+schema = make_executable_schema(
+    type_defs, query
+)
 
-    params = {
-        'temperature': sensors.get_temperature(),
-        'mean_temp_day': sensors.get_mean_temp_day(),
-        'heat_index': sensors.get_heat_index(),
-        'relative_humidity': sensors.get_relative_humidity(),
-        'light_sensor_one_wave_length': sensors.get_light_sensor_one_wave_length(),
-        'light_sensor_two_wave_length': sensors.get_light_sensor_two_wave_length(),
-        'number_of_occupants': sensors.get_number_of_occupants(),
-        'activity_of_occupants': sensors.get_activity_of_occupants(),
-        'state_of_door': sensors.get_state_of_door(),
-        'hour': sensors.get_hour(),
-        'minute': sensors.get_minute(),
-        'second': sensors.get_second(),
-        '1': sensors.get_state_of_door(),
-        '2': sensors.get_hour(),
-        '3': sensors.get_minute(),
-        '4': sensors.get_second(),
-        '5': sensors.get_second(),
-    }
-
-    prediction_data = []
-
-    for key, value in params.items():
-        if key in json:
-            prediction_data.append(json[key])
-        else:
-            prediction_data.append(value)
-
-    predictor = Predictor()
-
-    prediction_data = pd.DataFrame([prediction_data])
-
-    predictions = predictor.predict_model(prediction_data)
-
-    plot = predictor.plot(prediction_data)
-
-    return jsonify(plot.data)
-
+# Map HTTP Resolvers
+register_http(app, schema)
 
 if __name__ == '__main__':
     app.run()
