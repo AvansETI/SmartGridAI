@@ -2,6 +2,12 @@ from time import time
 
 # @TODO: Functions could return live SendLab data from graphana...
 
+"""
+Senors.py is used when the api doesnt receive any or some off the required data, this is to make sure that the api always has the required data.
+In future this could hook into grafana, giving the accurate data from grafana
+"""
+
+
 def get_temperature():
     return 21.961956170634103
 
