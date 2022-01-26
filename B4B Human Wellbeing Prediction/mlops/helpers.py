@@ -19,6 +19,7 @@ def get_data_and_split(file_path):
     return train_test_split(X, y, stratify=y.values, test_size=0.33, random_state=1)
 
 
+# score will score the model based on a few different scoring functions and return it as a dictionary
 def score(y_true, y_pred):
     accuracy = accuracy_score(y_true, y_pred)
     balanced_accuracy = balanced_accuracy_score(y_true, y_pred)
@@ -49,10 +50,16 @@ def score(y_true, y_pred):
     return scores
 
 
+# custom_scoring gets the values from the score function and simply returns the sum of the scores
+# custom_scoring and score are split up because score can now be used to get the scores separately if needed while
+# custom_scoring can be used to only get the sum score which is needed for the tpot optimizer
 def custom_scoring(y_true, y_pred):
     return sum(score(y_true, y_pred).values())
 
 
+# custom_scoring_threshold gets the scores from the score function and checks if they passed a number of thresholds
+# For every score a threshold can be entered which can be found in the score_thresholds dictionary
+# There is also a mean_score_threshold which is used to check the mean of all scores
 def custom_scoring_threshold(model, X_test, y_test):
     mean_score_threshold = 0.9
 

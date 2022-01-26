@@ -9,6 +9,14 @@ from utils import calculate_heat_index
 def register(query):
     @query.field("predict")
     def predict_resolver(obj, info, input):
+        """
+        Resolver for the predict route, uses the input data and the sensors to create a parsable prediction data array, then uses the t-pot model to make a prediction.
+        Args:
+            input: Input dictionary from the client
+
+        Returns:
+            diciontary with the prediction and shap data
+        """
         prediction_data = {
             "hour": (input["hour"] if "hour" in input else sensors.get_hour()),
             "minute": (input["minute"] if "minute" in input else sensors.get_minute()),
