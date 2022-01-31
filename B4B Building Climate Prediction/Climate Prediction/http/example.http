@@ -1,0 +1,40 @@
+POST http://{{host}}/convert
+Content-Type: application/json
+
+{
+  "-d": "./example_raw_datasets/LocationA.csv",
+  "-t": "Timestamp",
+  "-r": "16min",
+  "-n": "test_dataset.csv"
+}
+
+###
+
+POST http://{{host}}/generate
+Content-Type: application/json
+
+{
+  "Tft": "",
+  "-hy": ""
+}
+
+###
+
+POST http://{{host}}/train
+Content-Type: application/json
+
+{
+  "-d": "093938-10min.csv",
+  "-e": 1
+}
+
+###
+
+POST http://{{host}}/predict
+Content-Type: application/json
+
+{
+  "-d": "093938-10min.csv",
+  "-m": "6a429b1a-7955-4f08-9ff4-e58a37868c3f",
+  "-tu": "16 minutes"
+}
