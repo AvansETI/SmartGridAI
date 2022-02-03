@@ -17,13 +17,13 @@ query = ObjectType("Query")
 register_graphql(query)
 
 # Load Schema
-type_defs = load_schema_from_path(f"{os.path.dirname(os.path.abspath(__file__))}/schema.graphql")
-schema = make_executable_schema(
-    type_defs, query
+type_defs = load_schema_from_path(
+    f"{os.path.dirname(os.path.abspath(__file__))}/schema.graphql"
 )
+schema = make_executable_schema(type_defs, query)
 
 # Map HTTP Resolvers
 register_http(app, schema)
 
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    app.run(host="0.0.0.0")
