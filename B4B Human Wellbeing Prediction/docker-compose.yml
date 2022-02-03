@@ -5,6 +5,10 @@ services:
     build: "./api"
     ports:
       - "5000:5000"
+  pipelines:
+    build: "./mlops"
+    ports:
+      - "8443:8443"
   app:
     build: "./app"
     ports:
