@@ -1,0 +1,42 @@
+@startuml
+!theme plain
+
+skinparam linetype ortho
+
+node SendLabServer {
+    database MongoDB
+}
+
+node MLOpsServer {
+    database SQLite
+}
+
+node API {
+    component WebAPI
+
+    artifact model
+    artifact shap
+    artifact features
+}
+
+node PC {
+    node  Browser {
+        component WebApp
+    }
+}
+
+SendLabServer --- MLOpsServer : TCP/IP
+MLOpsServer --- API : TCP/IP
+API -- PC : TCP/IP
+
+SQLite .> MongoDB
+
+MLOpsServer .> WebAPI : Deploy artifacts
+
+WebAPI .left.> model
+WebAPI .> shap
+shap .> features
+
+WebApp .up0).> WebAPI
+
+@enduml

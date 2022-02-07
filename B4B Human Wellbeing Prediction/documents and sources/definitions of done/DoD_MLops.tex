@@ -1,0 +1,31 @@
+\documentclass[12pt, letterpaper]{article}
+
+\title{Definition of Done MLOps}
+\author{}
+\date{\today}
+
+\begin{document}
+	
+\maketitle
+
+\newpage
+
+\section{Introduction}
+One of the deliverables within this project is a MLOps pipeline used for the periodic extracting and processing of climate data, and the training, validating and uploading of a machine learning model. This document describes what steps the MLOps pipeline should contain and when it is considered done.
+
+\section{What should the MLOps pipeline do?}
+The MLOps pipeline should be able to periodically collect new data from a variety of sources. This data should then be processed. After processing a machine learning model must be trained. To ensure the trustworthiness of the model an accuracy test must be passed before it's deployed to our application.
+
+\section{When do we consider the MLOps pipeline to be "done"?}
+The MLOps pipeline is considered done when the following pipeline steps are implemented:
+
+\begin{enumerate}
+	\item Obtain the dataset
+	\item Clean the dataset
+	\item Process the dataset
+	\item Train model
+	\item Validate that the model accuracy is above a certain threshold.
+	\item Upload trained model to prototype
+\end{enumerate}
+	
+\end{document}
