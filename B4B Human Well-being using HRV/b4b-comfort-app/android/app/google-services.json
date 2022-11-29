@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "290150145717",
+    "project_id": "b4b-comfort-20eeb",
+    "storage_bucket": "b4b-comfort-20eeb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290150145717:android:9cda28cb49e22d7ff7e8fc",
+        "android_client_info": {
+          "package_name": "com.example.brains4buildings"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "290150145717-rt5losddb3d2c42p5ak58r3pdijf5t8f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEugfedDxSAyttZvA_LmkIwiyLW28KEGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "290150145717-rt5losddb3d2c42p5ak58r3pdijf5t8f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
