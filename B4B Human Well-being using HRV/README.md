@@ -16,7 +16,8 @@ The project is done when a correlation between HRV and personal comfort level is
 
 # Research question
 
-What is HRV (Heart Rate Variabiltiy)?
-How can one measure HRV?
-How can one retrieve active and passive feedback?
-Does HRV have an impact on a person's well-being?
+- What is HRV (Heart Rate Variabiltiy)?
+- How can one measure HRV?
+- What metrics are there for HRV?
+- How can one retrieve active and passive feedback?
+- Does HRV have an impact on a person's well-being?
