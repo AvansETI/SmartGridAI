@@ -12,6 +12,8 @@ The scope of the project is to explore how AI can be applied to predict in real-
 
 # Goal
 
+The project is done when a correlation between HRV and personal comfort level is found or when it is sure there is no correlation. If no correlation exists, then we will create a model for personal comfort level with other features. If a correlation exists, a model for predicting comfort level with HRV will be made. This model should be as accurate as reasonably possible within the time limit and with the collected data. After the model is trained and tested, it must be made available for the end users. The occupants and EMS should be able to act on the AI model via a dashboard or another interface.
+
 # Research question
 
 What is HRV (Heart Rate Variabiltiy)?
