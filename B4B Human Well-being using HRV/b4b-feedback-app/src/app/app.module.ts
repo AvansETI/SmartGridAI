@@ -7,6 +7,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { AboutComponent } from './pages/about/about.component';
 import { PredictComponent } from './pages/predict/predict.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { PrivacyComponent } from './pages/privacy/privacy.component';
     HomeComponent,
     AboutComponent,
     PredictComponent,
-    PrivacyComponent
+    PrivacyComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
