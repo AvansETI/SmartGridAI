@@ -43,7 +43,7 @@
       <nav class="hidden space-x-10 md:flex" *ngFor="let item of menuItems">
         <a
           [routerLink]="item.link"
-          class="text-base font-medium text-quarternary hover:text-gray-900"
+          class="text-base font-medium text-white hover:text-gray-900"
           [routerLinkActive]="['selected']"
           >{{ item.title }}</a
         >
@@ -51,7 +51,7 @@
       <div class="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
         <a
           href="#"
-          class="whitespace-nowrap text-base font-medium text-quarternary hover:text-gray-900"
+          class="whitespace-nowrap text-base font-medium text-white hover:text-gray-900"
           >Sign in</a
         >
         <a

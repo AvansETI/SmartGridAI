@@ -5,4 +5,13 @@
 
 body {
   margin: 0;
+  @apply bg-quarternary;
+}
+
+.top-elipse {
+  background: url("./assets/elipse.svg") no-repeat;
+}
+
+.bottom-elipse {
+  background: url("./assets/white-elipse.svg") no-repeat;
 }
