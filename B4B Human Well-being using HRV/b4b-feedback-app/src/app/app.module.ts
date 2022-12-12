@@ -8,6 +8,11 @@ import { AboutComponent } from './pages/about/about.component';
 import { PredictComponent } from './pages/predict/predict.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { HeaderComponent } from './components/header/header.component';
+import { ErrorDisplayComponent } from './components/error-display/error-display.component';
+import { TooltipComponent } from './components/tooltip/tooltip.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -16,13 +21,19 @@ import { HeaderComponent } from './components/header/header.component';
     AboutComponent,
     PredictComponent,
     PrivacyComponent,
-    HeaderComponent
+    HeaderComponent,
+    ErrorDisplayComponent,
+    TooltipComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    FontAwesomeModule,
+    ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

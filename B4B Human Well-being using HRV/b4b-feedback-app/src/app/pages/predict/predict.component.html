@@ -1,1 +1,186 @@
-<p>predict works!</p>
+<div class="bg-quarternary">
+  <div class="container mx-auto py-10 px-10 h-full">
+    <div class="pb-8">
+      <!-- TODO: Change text color to quarternary when background is fixed -->
+      <div class="text-4xl font-bold flex justify-center items-center">
+        Predict your personal comfort level
+      </div>
+    </div>
+    <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
+      <form [formGroup]="predictionForm" (submit)="makePrediction()">
+        <div class="grid grid-cols-2">
+          <div class="mb-3 pr-1">
+            <label
+              class="block uppercase text-gray-700 text-xs font-bold mb-2"
+              for="grid-password"
+              >Decile1<span class="text-orange-400 ml-1">*</span>
+              <app-tooltip
+                description="Your rank in your class in year 1 as a decile"
+                class="float-right"
+              ></app-tooltip></label
+            ><input
+              formControlName="decile1"
+              min="1"
+              max="10"
+              type="number"
+              class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
+              placeholder="1-10"
+              style="transition: all 0.15s ease 0s"
+            />
+            <app-error-display
+              [control]="this.predictionForm.controls['decile1']"
+            ></app-error-display>
+          </div>
+          <div class="mb-3 pl-1">
+            <label
+              class="block uppercase text-gray-700 text-xs font-bold mb-2"
+              for="grid-password"
+              >Decile3<span class="text-orange-400 ml-1">*</span
+              ><app-tooltip
+                description="Your rank in your class in year 3 as a decile"
+                class="float-right"
+              ></app-tooltip></label
+            ><input
+              formControlName="decile3"
+              min="1"
+              max="10"
+              type="number"
+              class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
+              placeholder="1-10"
+              style="transition: all 0.15s ease 0s"
+            />
+            <app-error-display
+              [control]="this.predictionForm.controls['decile3']"
+            ></app-error-display>
+          </div>
+          <div class="mb-3 pr-1">
+            <label
+              class="block uppercase text-gray-700 text-xs font-bold mb-2"
+              for="grid-password"
+              >lsat<span class="text-orange-400 ml-1">*</span
+              ><app-tooltip
+                description="Your LSAT score"
+                class="float-right"
+              ></app-tooltip></label
+            ><input
+              formControlName="lsat"
+              min="120"
+              max="180"
+              type="number"
+              class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
+              placeholder="120-180"
+              style="transition: all 0.15s ease 0s"
+            />
+            <app-error-display
+              [control]="this.predictionForm.controls['lsat']"
+            ></app-error-display>
+          </div>
+          <div class="mb-3 pl-1">
+            <label
+              class="block uppercase text-gray-700 text-xs font-bold mb-2"
+              for="grid-password"
+              >ugpa<span class="text-orange-400 ml-1">*</span
+              ><app-tooltip
+                description="Your undergraduate GPA score"
+                class="float-right"
+              ></app-tooltip></label
+            ><input
+              formControlName="ugpa"
+              min="0"
+              max="4"
+              type="number"
+              class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
+              placeholder="0.0-4.0"
+              style="transition: all 0.15s ease 0s"
+            />
+            <app-error-display
+              [control]="this.predictionForm.controls['ugpa']"
+            ></app-error-display>
+          </div>
+          <div class="mb-3 pr-1">
+            <label
+              class="block uppercase text-gray-700 text-xs font-bold mb-2"
+              for="grid-password"
+              >fulltime</label
+            >
+            <div class="flex items-start">
+              <div class="flex h-5 items-center">
+                <input
+                  formControlName="fulltime"
+                  id="comments"
+                  name="comments"
+                  type="checkbox"
+                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <p class="text-gray-500">
+                  Whether or not you have attended law school fulltime.
+                </p>
+              </div>
+              <app-error-display
+                [control]="this.predictionForm.controls['fulltime']"
+              ></app-error-display>
+            </div>
+          </div>
+          <div class="mb-3 pl-1">
+            <label
+              class="block uppercase text-gray-700 text-xs font-bold mb-2"
+              for="grid-password"
+              >grad</label
+            >
+            <div class="flex items-start">
+              <div class="flex h-5 items-center">
+                <input
+                  formControlName="grad"
+                  id="comments"
+                  name="comments"
+                  type="checkbox"
+                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <p class="text-gray-500">
+                  Whether or not you have graduated law school.
+                </p>
+              </div>
+              <app-error-display
+                [control]="this.predictionForm.controls['grad']"
+              ></app-error-display>
+            </div>
+          </div>
+        </div>
+        <ng-container
+          *ngIf="this.loading === false; then initialState; else showProcessing"
+        ></ng-container>
+        <div class="text-center mt-2">
+          <ng-template #initialState>
+            <button
+              class="bg-gray-900 text-white active:bg-gray-700 disabled:bg-gray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
+              type="submit"
+              style="transition: all 0.15s ease 0s"
+              [disabled]="this.predictionForm.invalid"
+            >
+              Predict
+            </button>
+          </ng-template>
+          <ng-template #showProcessing
+            ><button
+              class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
+              type="submit"
+              style="transition: all 0.15s ease 0s"
+              [disabled]="true"
+            >
+              <div class="flex items-center justify-center center gap-2">
+                <span
+                  class="h-6 w-6 block rounded-full border-4 border-t-cyan-400 animate-spin"
+                ></span>
+                Processing
+              </div>
+            </button></ng-template
+          >
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
