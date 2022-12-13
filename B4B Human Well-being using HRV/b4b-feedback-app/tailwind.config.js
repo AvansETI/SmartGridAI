@@ -11,6 +11,7 @@ module.exports = {
         neutral: "#FDF4F7",
         primary_button: "#FA5454",
         primary_button_disabled: "#fb8383",
+        layover: "#EFF6FF",
       },
     },
   },

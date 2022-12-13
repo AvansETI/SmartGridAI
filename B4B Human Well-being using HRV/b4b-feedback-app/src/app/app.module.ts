@@ -13,6 +13,7 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     HeaderComponent,
     ErrorDisplayComponent,
     TooltipComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
