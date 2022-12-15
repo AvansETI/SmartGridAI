@@ -93,6 +93,12 @@ class _ScreenOneState extends State<ScreenOne> {
     'LD315',
     'LD316',
     'LD323',
+    'LD328',
+    'LA Explora floor 1',
+    'LA Explora floor 2',
+    'LA Explora floor 3',
+    'LA Explora floor 4',
+    'LA Explora floor 5'
   ];
   final durations = ['less than an hour', '1-2 hours', 'more than 3 hours'];
   String? value = 'LA001';
@@ -181,6 +187,12 @@ class _ScreenOneState extends State<ScreenOne> {
     'LD315': 78,
     'LD316': 79,
     'LD323': 80,
+    'LD328': 81,
+    'LA Explora floor 1': 82,
+    'LA Explora floor 2': 83,
+    'LA Explora floor 3': 84,
+    'LA Explora floor 4': 85,
+    'LA Explora floor 5': 86
   };
   DropdownMenuItem<String> buildMenuItems(String item) =>
       DropdownMenuItem(value: item, child: Text(item));
@@ -506,7 +518,7 @@ class _ScreenOneState extends State<ScreenOne> {
                 ),
               ),
               SizedBox(height: 30.0),
-              Text('2. How did you come to the HHS today?',
+              Text('2. How did you come to Avans today?',
                   style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,

@@ -49,11 +49,11 @@ class _ScreenFourState extends State<ScreenFour> {
             child: Center(
           child: Column(children: [
             SizedBox(height: 140),
-            const Text(
+            Text(
               'Thank you so much! \n\nPlease submit 3 responses in a day :)',
               style: TextStyle(fontSize: 15),
             ),
-            const SizedBox(height: 15),
+            SizedBox(height: 15),
             ElevatedButton(
                 onPressed: () {
                   setState(() {
@@ -70,7 +70,7 @@ class _ScreenFourState extends State<ScreenFour> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Wrapper()));
                 },
-                child: const Text('Finish'))
+                child: Text('Finish'))
           ]),
         )));
   }
