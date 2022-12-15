@@ -56,17 +56,6 @@ class _ScreenFourState extends State<ScreenFour> {
             SizedBox(height: 15),
             ElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    mood = 0;
-                  });
-                  thermalComfort = 0;
-                  thermalPreference = 0;
-                  allGood = false;
-                  suffocating = false;
-                  humid = false;
-                  smelly = false;
-                  stuffy = false;
-                  beverage = 0;
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Wrapper()));
                 },

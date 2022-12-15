@@ -26,14 +26,13 @@ class _ScreenThreeState extends State<ScreenThree> {
   }
 
   final AuthService _auth = AuthService();
-  final eatenRecently = [
+  final eatenRecentlyOptions = [
     'No',
     '30 mins ago',
     'One hour ago',
     'Two hours ago',
   ];
   // final durations = ['less than an hour', '1-2 hours', 'more than 3 hours'];
-  String? value = '30 mins ago';
   // String? value2 = 'less than an hour';
   // int beverage = 0;
   // // ignore: non_constant_identifier_names
@@ -77,9 +76,9 @@ class _ScreenThreeState extends State<ScreenThree> {
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2.0)),
               DropdownButton<String>(
-                  value: value,
-                  items: eatenRecently.map(buildMenuItems).toList(),
-                  onChanged: (value) => setState(() => this.value = value)),
+                  value: eatenRecently,
+                  items: eatenRecentlyOptions.map(buildMenuItems).toList(),
+                  onChanged: (value) => setState(() => eatenRecently = value)),
               SizedBox(height: 20.0),
               Text('9. Have you had a hot/cold beverage recently?',
                   style: TextStyle(
@@ -638,7 +637,7 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   stuffy,
                                   smelly,
                                   allGood,
-                                  value,
+                                  eatenRecently,
                                   beverage,
                                   cloth1,
                                   cloth2,

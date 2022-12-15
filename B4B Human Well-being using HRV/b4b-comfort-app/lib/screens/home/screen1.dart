@@ -101,8 +101,6 @@ class _ScreenOneState extends State<ScreenOne> {
     'LA Explora floor 5'
   ];
   final durations = ['less than an hour', '1-2 hours', 'more than 3 hours'];
-  String? value = 'LA001';
-  String? value2 = 'less than an hour';
   // ignore: non_constant_identifier_names
   bool nextButtonActive = false;
   // int screen = 1;
@@ -210,7 +208,7 @@ class _ScreenOneState extends State<ScreenOne> {
             onPressed: () async {
               await _auth.signOut();
               setState(() {
-                mood = 0;
+                // mood = 0;
                 modeOfTransport = 0;
                 cloth1 = false;
                 cloth2 = false;
@@ -364,7 +362,7 @@ class _ScreenOneState extends State<ScreenOne> {
                               child: InkWell(
                                 onTap: () {
                                   setState(() {
-                                    mood = 0;
+                                    mood = 3;
                                   });
                                 },
                                 child: Container(
@@ -904,9 +902,11 @@ class _ScreenOneState extends State<ScreenOne> {
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2.0)),
               DropdownButton<String>(
-                  value: value,
+                  value: location,
                   items: rooms.map(buildMenuItems).toList(),
-                  onChanged: (value) => setState(() => this.value = value)),
+
+                  onChanged: (value) => setState(() => location = value)
+                  ),
               SizedBox(height: 10.0),
               Text('4. How long have you been here',
                   style: TextStyle(
@@ -914,16 +914,13 @@ class _ScreenOneState extends State<ScreenOne> {
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2.0)),
               DropdownButton<String>(
-                  value: value2,
+                  value: durationInBuilding,
                   items: durations.map(buildMenuItems).toList(),
-                  onChanged: (value2) => setState(() => this.value2 = value2)),
+                  onChanged: (value2) => setState(() => durationInBuilding = value2)),
               SizedBox(height: 35.0),
               ElevatedButton(
                   onPressed: (mood != 0) && (modeOfTransport != 0)
                       ? () async {
-                          // setState(() => screen = 2);
-                          location = value;
-                          durationInBuilding = value2;
                           Navigator.push(
                               context,
                               MaterialPageRoute(
