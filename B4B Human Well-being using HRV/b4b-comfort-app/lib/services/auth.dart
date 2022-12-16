@@ -6,8 +6,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // create ouruser based on firebase user
+  AuthService(){
+    _auth
+        .authStateChanges()
+        .listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      }
+    });
+  }
 
+  // create our user based on firebase user
   OurUser? _userFromFirebaseUser(User user) {
     return user != null ? OurUser(uid: user.uid) : null;
   }
@@ -17,19 +26,6 @@ class AuthService {
     return _auth
         .authStateChanges()
         .map((User? user) => _userFromFirebaseUser(user!));
-  }
-
-  //sign in anonymously
-  Future signInAnon() async {
-    try {
-      UserCredential result = await _auth.signInAnonymously();
-      User? user = result.user;
-      unique_identification = result.user?.uid;
-      return _userFromFirebaseUser(user!);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
   }
 
   Future registerWithEmailAndPassword(String email, String password) async {
@@ -69,8 +65,6 @@ class AuthService {
     User? user = credential.user;
     return _userFromFirebaseUser(user!);
   }
-
-  //register with email and password
 
   //signout
   Future signOut() async {
