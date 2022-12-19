@@ -17,6 +17,7 @@ The project is done when a correlation between HRV and personal comfort level is
 # Research question
 
 - What is HRV (Heart Rate Variabiltiy)?
+- Should HRV be used as an indication for thermal wellbeing.
 - How can one measure HRV?
 - What metrics are there for HRV?
 - How can one retrieve active and passive feedback?
