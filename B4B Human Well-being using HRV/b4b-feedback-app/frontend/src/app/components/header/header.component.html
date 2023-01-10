@@ -22,7 +22,6 @@
           aria-expanded="false"
         >
           <span class="sr-only">Open menu</span>
-          <!-- Heroicon name: outline/bars-3 -->
           <svg
             class="h-6 w-6"
             xmlns="http://www.w3.org/2000/svg"
@@ -48,29 +47,9 @@
           >{{ item.title }}</a
         >
       </nav>
-      <div class="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-        <a
-          href="#"
-          class="whitespace-nowrap text-base font-medium text-white hover:text-gray-900"
-          >Sign in</a
-        >
-        <a
-          href="#"
-          class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-primary_button px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-          >Sign up</a
-        >
-      </div>
+      <div
+        class="hidden items-center justify-end md:flex md:flex-1 lg:w-0"
+      ></div>
     </div>
   </div>
-
-  <!--
-      Mobile menu, show/hide based on mobile menu state.
-
-      Entering: "duration-200 ease-out"
-        From: "opacity-0 scale-95"
-        To: "opacity-100 scale-100"
-      Leaving: "duration-100 ease-in"
-        From: "opacity-100 scale-100"
-        To: "opacity-0 scale-95"
-    -->
 </div>

@@ -19,10 +19,6 @@ export class HeaderComponent implements OnInit {
       link: '/predict',
       title: 'Predict',
     },
-    {
-      link: '/privacy',
-      title: 'Privacy',
-    },
   ];
 
   constructor() {}
