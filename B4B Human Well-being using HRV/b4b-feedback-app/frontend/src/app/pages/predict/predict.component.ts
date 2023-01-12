@@ -60,4 +60,12 @@ export class PredictComponent implements OnInit {
     this.prediction = undefined;
     this.loading = false;
   }
+
+  showExplanation() {
+    this.explanation = true;
+  }
+
+  hideExplanation() {
+    this.explanation = false;
+  }
 }
