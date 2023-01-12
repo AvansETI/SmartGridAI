@@ -1,39 +1,21 @@
 import uuid
+from copy import copy
+
+import matplotlib
 import numpy as np
+import pandas as pd
 import shap
-import base64
-
-import pandas as pd
-
 from flask import Flask, request, jsonify
-# from keras.models import load_model
-from sklearn.model_selection import train_test_split
-from io import BytesIO
 from flask_cors import CORS
-import numpy as np
-import pandas as pd
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.feature_selection import RFE
-from sklearn.linear_model import SGDClassifier
-import numpy as np
-import pandas as pd
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.feature_selection import SelectFwe, f_classif
 from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import make_pipeline, make_union
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.tree import DecisionTreeClassifier
-from tpot.builtins import StackingEstimator
 from sklearn.preprocessing import FunctionTransformer
-from copy import copy
-from sklearn.model_selection import train_test_split
-from sklearn.pipeline import make_pipeline, make_union
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.tree import DecisionTreeClassifier
 from tpot.builtins import StackingEstimator
-
-import matplotlib
-import matplotlib.pyplot as plt
+from tpot.builtins import ZeroCount
 
 matplotlib.use('Agg')
 
@@ -55,23 +37,23 @@ def transform_data(df):
 # This method is used for loading the needed data.
 def load_model():
     tpot_data = pd.read_csv('stripped.csv')
-    features = tpot_data[['Thermal Preference', 'TemperatureF', 'Humidity', 'Mood', 'Mode Of Transport', 'Eat Recent_Two hours ago', 'Light', 'TVOC', 'Cloth 2']]
+    features = tpot_data[['Thermal Preference', 'Temperature', 'Humidity', 'Mood', 'Mode Of Transport', 'Eat Recent_Two hours ago', 'Light', 'TVOC', 'Cloth 2', 'RMSSD']]
     training_features, testing_features, training_target, testing_target = \
         train_test_split(features, tpot_data['Thermal Comfort'], random_state=None)
 
-    # Average CV score on the training set was: 0.6819721718088324
+    # Average CV score on the training set was: 0.6923169993950392
     exported_pipeline = make_pipeline(
         make_union(
-            make_pipeline(
-                PolynomialFeatures(degree=2, include_bias=False, interaction_only=False),
-                SelectFwe(score_func=f_classif, alpha=0.022)
-            ),
+            StackingEstimator(estimator=make_pipeline(
+                SelectFwe(score_func=f_classif, alpha=0.048),
+                StackingEstimator(estimator=MLPClassifier(alpha=0.01, learning_rate_init=0.001)),
+                ZeroCount(),
+                MultinomialNB(alpha=0.1, fit_prior=False)
+            )),
             FunctionTransformer(copy)
         ),
-        StackingEstimator(
-            estimator=DecisionTreeClassifier(criterion="gini", max_depth=3, min_samples_leaf=5, min_samples_split=20)),
-        ExtraTreesClassifier(bootstrap=False, criterion="entropy", max_features=0.45, min_samples_leaf=3,
-                             min_samples_split=5, n_estimators=100)
+        ExtraTreesClassifier(bootstrap=False, criterion="entropy", max_features=0.8, min_samples_leaf=3,
+                             min_samples_split=8, n_estimators=100)
     )
 
     return exported_pipeline.fit(training_features, training_target), features
@@ -128,10 +110,10 @@ def predict():
 
     if len(errors) < 1:
         # Predict
-        x = np.zeros((1, 9))
+        x = np.zeros((1, 10))
 
         x[0, 0] = content['thermalPreference']
-        x[0, 1] = content['temperatureF']
+        x[0, 1] = content['temperature']
         x[0, 2] = content['humidity']
         x[0, 3] = content['mood']
         x[0, 4] = content['modeOfTransport']
@@ -139,6 +121,7 @@ def predict():
         x[0, 6] = content['light']
         x[0, 7] = content['TVOC']
         x[0, 8] = content['cloth2']
+        x[0, 9] = content['RMSSD']
 
         # Prediction
         prediction = model.predict(x)
