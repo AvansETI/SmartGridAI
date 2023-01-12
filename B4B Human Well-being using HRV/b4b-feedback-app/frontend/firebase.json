@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "feedback-app-frontend",
+    "public": "dist/b4b-feedback-app",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
