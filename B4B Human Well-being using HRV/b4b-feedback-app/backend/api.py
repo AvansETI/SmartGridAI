@@ -6,10 +6,20 @@ import base64
 import pandas as pd
 
 from flask import Flask, request, jsonify
-from keras.models import load_model
+# from keras.models import load_model
 from sklearn.model_selection import train_test_split
 from io import BytesIO
 from flask_cors import CORS
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline, make_union
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.tree import DecisionTreeClassifier
+from tpot.builtins import StackingEstimator
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -32,27 +42,24 @@ def transform_data(df):
 
 
 # This method is used for loading the needed data.
-def load_data():
-    # Fetch data fro csv file.
-    data = pd.read_csv('../../b4b-comfort-model/final.csv')
+def load_model():
+    tpot_data = pd.read_csv('stripped.csv')
+    features = tpot_data.drop('Thermal Comfort', axis=1)
+    training_features, testing_features, training_target, testing_target = \
+        train_test_split(features, tpot_data['Thermal Comfort'], random_state=None)
 
-    # Transform data.
-    df = transform_data(data)
+    # Average CV score on the training set was: 0.7111917725347852
+    exported_pipeline = make_pipeline(
+        StackingEstimator(
+            estimator=SGDClassifier(alpha=0.0, eta0=0.1, fit_intercept=False, l1_ratio=0.0, learning_rate="invscaling",
+                                    loss="modified_huber", penalty="elasticnet", power_t=100.0)),
+        MinMaxScaler(),
+        RFE(estimator=ExtraTreesClassifier(criterion="entropy", max_features=0.05, n_estimators=100),
+            step=0.6000000000000001),
+        DecisionTreeClassifier(criterion="entropy", max_depth=5, min_samples_leaf=3, min_samples_split=8)
+    )
 
-    # Only take the needed column(s)
-    # df = df[['decile3', 'decile1', 'lsat', 'ugpa', 'fulltime', 'grad', 'pass_bar']]
-
-    # Shuffle data to prevent none existent order corr
-    # df = df.sample(frac=1, random_state=1)
-
-    # Split dataset into target variable and features
-    # df_y = df['pass_bar']
-    # df_X = df.drop('pass_bar', axis=1)
-
-    # Split the data into a train and test dataset
-    # X_train, X_test, y_train, y_test = train_test_split(df_X, df_y, test_size=0.3, random_state=42)
-
-    # return (X_train, y_train), (X_test, y_test)
+    return exported_pipeline.fit(training_features, training_target), features
 
 
 # The setup method is used for setting up everything that we need to work with.
@@ -60,18 +67,20 @@ def setup():
     # Load model.
     # Model has not yet been created. Pass it through the
     # load_model method once it has been created.
-    _model = load_model()
+    _model, train_features = load_model()
 
     # Load training data.
     # (train_features, _), _ = load_data()
 
     # Load SHAP (Explainability AI)
+    _shap_explainer = shap.KernelExplainer(_model.predict_proba, train_features[:100])
+
     # _shap_explainer = shap.KernelExplainer(_model, train_features[:100])
-    #
-    # return _model, _shap_explainer
+
+    return _model, _shap_explainer
 
 
-# (model, shap_explainer) = setup()
+model, shap_explainer = setup()
 
 
 @app.route('/', methods=['GET'])
@@ -113,15 +122,13 @@ def predict():
 
         x[0, 0] = content['decile3']
         x[0, 1] = content['decile1']
-        x[0, 2] = content[
-                      'lsat'] - 120  # The range of values of the lsat in this dataset do not correspond with real-life data. In this dataset it ranges from 0-60 (educated guess). The range from the real lsat is 120-180 (which comes to 60 inbetween). So to calculate an accurate lsat score for a prediction 120 points must be deducted from provided real-life lsat score.
+        x[0, 2] = content['lsat']
         x[0, 3] = content['ugpa']
         x[0, 4] = content['fulltime']
         x[0, 5] = content['grad']
 
         # Prediction
         prediction = model.predict(x)
-        chance_of_passing = float(prediction[0]) * 100
 
         # Explanation
         shap_values = shap_explainer.shap_values(x)
@@ -143,7 +150,7 @@ def predict():
         # Request response
         response = {
             "id": str(uuid.uuid4()),
-            "chanceOfPassing": chance_of_passing,
+            "thermalComfort": prediction,
             "shap-img": shap_img,
             "errors": errors
         }
