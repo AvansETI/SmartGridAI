@@ -11,6 +11,7 @@ from sklearn.preprocessing import FunctionTransformer
 from copy import copy
 
 # NOTE: Make sure that the outcome column is labeled 'target' in the data file
+# Thermal Preference, TemperatureF, Humidity, Mood, Mode Of Transport, Eat Recent_Two hours ago, Light, TVOC, Cloth 2
 tpot_data = pd.read_csv('PATH/TO/DATA/FILE', sep='COLUMN_SEPARATOR', dtype=np.float64)
 features = tpot_data.drop('target', axis=1)
 training_features, testing_features, training_target, testing_target = \
