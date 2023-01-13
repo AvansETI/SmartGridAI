@@ -11,10 +11,12 @@ from sklearn.preprocessing import FunctionTransformer
 from copy import copy
 
 # NOTE: Make sure that the outcome column is labeled 'target' in the data file
-tpot_data = pd.read_csv('PATH/TO/DATA/FILE', sep='COLUMN_SEPARATOR', dtype=np.float64)
-features = tpot_data.drop('target', axis=1)
+# Thermal Preference, Temperature, Humidity, Mood, Mode Of Transport, Eat Recent_Two hours ago, Light, TVOC, Cloth 2, RMSSD
+tpot_data = pd.read_csv('final.csv')
+target = tpot_data['Thermal Comfort']
+features = tpot_data[['Thermal Preference', 'Temperature', 'Humidity', 'Mood', 'Mode Of Transport', 'Eat Recent_Two hours ago', 'Light', 'TVOC', 'Cloth 2', 'RMSSD']]
 training_features, testing_features, training_target, testing_target = \
-            train_test_split(features, tpot_data['target'], random_state=None)
+            train_test_split(features, target, random_state=None)
 
 # Average CV score on the training set was: 0.6923169993950392
 exported_pipeline = make_pipeline(
@@ -32,3 +34,6 @@ exported_pipeline = make_pipeline(
 
 exported_pipeline.fit(training_features, training_target)
 results = exported_pipeline.predict(testing_features)
+
+print('Test:', exported_pipeline.score(testing_features, testing_target))
+print('Train:', exported_pipeline.score(training_features, training_target))
