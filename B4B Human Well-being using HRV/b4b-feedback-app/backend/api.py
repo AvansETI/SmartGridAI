@@ -1,5 +1,4 @@
 import uuid
-from copy import copy
 
 import matplotlib
 import numpy as np
@@ -7,15 +6,13 @@ import pandas as pd
 import shap
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.feature_selection import SelectFwe, f_classif
+from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.feature_selection import VarianceThreshold
 from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.neural_network import MLPClassifier
-from sklearn.pipeline import make_pipeline, make_union
-from sklearn.preprocessing import FunctionTransformer
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.svm import LinearSVR
 from tpot.builtins import StackingEstimator
-from tpot.builtins import ZeroCount
 
 matplotlib.use('Agg')
 
@@ -41,19 +38,16 @@ def load_model():
     training_features, testing_features, training_target, testing_target = \
         train_test_split(features, tpot_data['Thermal Comfort'], random_state=None)
 
-    # Average CV score on the training set was: 0.6923169993950392
+    # Average CV score on the training set was: -0.29205888082274656
     exported_pipeline = make_pipeline(
-        make_union(
-            StackingEstimator(estimator=make_pipeline(
-                SelectFwe(score_func=f_classif, alpha=0.048),
-                StackingEstimator(estimator=MLPClassifier(alpha=0.01, learning_rate_init=0.001)),
-                ZeroCount(),
-                MultinomialNB(alpha=0.1, fit_prior=False)
-            )),
-            FunctionTransformer(copy)
-        ),
-        ExtraTreesClassifier(bootstrap=False, criterion="entropy", max_features=0.8, min_samples_leaf=3,
-                             min_samples_split=8, n_estimators=100)
+        StackingEstimator(
+            estimator=LinearSVR(C=0.01, dual=False, epsilon=0.1, loss="squared_epsilon_insensitive", tol=0.0001)),
+        StandardScaler(),
+        MinMaxScaler(),
+        VarianceThreshold(threshold=0.01),
+        MinMaxScaler(),
+        ExtraTreesRegressor(bootstrap=False, max_features=0.4, min_samples_leaf=1, min_samples_split=3,
+                            n_estimators=100)
     )
 
     return exported_pipeline.fit(training_features, training_target), features
@@ -67,9 +61,10 @@ def setup():
     _model, train_features = load_model()
 
     # Load SHAP (Explainability AI)
-    _shap_explainer = shap.KernelExplainer(_model.predict_proba, train_features[:100])
+    # _shap_explainer = shap.KernelExplainer(_model.predict_proba, train_features[:100])
 
-    return _model, _shap_explainer
+    # return _model, _shap_explainer
+    return _model, ()
 
 
 model, shap_explainer = setup()
