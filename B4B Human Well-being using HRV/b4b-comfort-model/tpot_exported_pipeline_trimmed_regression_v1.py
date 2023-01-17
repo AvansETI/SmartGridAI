@@ -12,7 +12,7 @@ from tpot.builtins import StackingEstimator
 # Thermal Preference, TemperatureF, Humidity, Mood, Mode Of Transport, Eat Recent_Two hours ago, Light, TVOC, Cloth 2
 tpot_data = pd.read_csv('final.csv')
 target = tpot_data['Thermal Comfort']
-features = tpot_data[['Thermal Preference', 'TemperatureF', 'Humidity', 'Mood', 'Mode Of Transport', 'Eat Recent_Two hours ago', 'Light', 'TVOC', 'Cloth 2']]
+features = tpot_data[['Thermal Preference', 'Temperature', 'Humidity', 'Mood', 'Mode Of Transport', 'Eat Recent_Two hours ago', 'Light', 'TVOC', 'Cloth 2', 'RMSSD']]
 training_features, testing_features, training_target, testing_target = \
             train_test_split(features, target, random_state=None)
 

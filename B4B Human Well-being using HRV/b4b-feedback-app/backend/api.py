@@ -1,4 +1,6 @@
+import base64
 import uuid
+from io import BytesIO
 
 import matplotlib
 import numpy as np
@@ -6,6 +8,7 @@ import pandas as pd
 import shap
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from matplotlib import pyplot as plt
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.model_selection import train_test_split
@@ -34,9 +37,12 @@ def transform_data(df):
 # This method is used for loading the needed data.
 def load_model():
     tpot_data = pd.read_csv('stripped.csv')
-    features = tpot_data[['Thermal Preference', 'Temperature', 'Humidity', 'Mood', 'Mode Of Transport', 'Eat Recent_Two hours ago', 'Light', 'TVOC', 'Cloth 2', 'RMSSD']]
+    features = tpot_data[
+        ['Thermal Preference', 'Temperature', 'Humidity', 'Mood', 'Mode Of Transport', 'Eat Recent_Two hours ago',
+         'Light', 'TVOC', 'Cloth 2', 'RMSSD']]
+    target = tpot_data['Thermal Comfort']
     training_features, testing_features, training_target, testing_target = \
-        train_test_split(features, tpot_data['Thermal Comfort'], random_state=None)
+        train_test_split(features.values, target.values, random_state=None)
 
     # Average CV score on the training set was: -0.29205888082274656
     exported_pipeline = make_pipeline(
@@ -50,7 +56,20 @@ def load_model():
                             n_estimators=100)
     )
 
-    return exported_pipeline.fit(training_features, training_target), features
+    exported_pipeline.fit(training_features, training_target)
+
+    return exported_pipeline
+
+    # shap_df = pd.DataFrame(exported_pipeline.named_steps['minmaxscaler-2'].transform(
+    #     exported_pipeline.named_steps['variancethreshold'].transform(
+    #         exported_pipeline.named_steps['minmaxscaler-1'].transform(
+    #             exported_pipeline.named_steps['standardscaler'].transform(
+    #                 exported_pipeline.named_steps['stackingestimator'].transform(training_features[:100]))))))
+    #
+    # _shap_explainer = shap.KernelExplainer(exported_pipeline.named_steps['extratreesregressor'].predict,
+    #                                        shap_df)
+    #
+    # return exported_pipeline, _shap_explainer, shap_df
 
 
 # The setup method is used for setting up everything that we need to work with.
@@ -58,16 +77,17 @@ def setup():
     # Load model.
     # Model has not yet been created. Pass it through the
     # load_model method once it has been created.
-    _model, train_features = load_model()
+    _model = load_model()
 
-    # Load SHAP (Explainability AI)
-    # _shap_explainer = shap.KernelExplainer(_model.predict_proba, train_features[:100])
+    return _model
 
-    # return _model, _shap_explainer
-    return _model, ()
+    # _model, _shap_explainer, shap_df = load_model()
+    # return _model, _shap_explainer, shap_df
 
 
-model, shap_explainer = setup()
+
+model = setup()
+# model, shap_explainer, shap_data = setup()
 
 
 @app.route('/', methods=['GET'])
@@ -84,19 +104,6 @@ def root():
 def predict():
     content = request.json
     errors = []
-
-    # # Check for valid input fields
-    # for name in content:
-    #     if name in EXPECTED:
-    #         expected_min = EXPECTED[name]['min']
-    #         expected_max = EXPECTED[name]['max']
-    #         value = float(content[name])
-    #         if value < expected_min or value > expected_max:
-    #             errors.append(
-    #                 f"Out of bounds: {name}, has value of: {value}, but should be between {expected_min} and {expected_max}."
-    #             )
-    #     else:
-    #         errors.append(f"Unexpected field: {name}.")
 
     # Check for missing input fields
     for name in EXPECTED:
@@ -123,17 +130,18 @@ def predict():
         print(prediction)
 
         # # Explanation
-        # shap_values = shap_explainer.shap_values(x)
+        # shap_values = shap_explainer.shap_values(shap_data)
         # shap_plot = shap.force_plot(
         #     shap_explainer.expected_value,
         #     shap_values[0],
         #     x,
         #     matplotlib=True,
-        #     feature_names=['thermalPreference', 'temperatureF', 'humdity', 'mood', 'modeOfTransport', 'eatRecentTwoHoursAgo', 'light', 'TVOC', 'cloth2'],
+        #     feature_names=['thermalPreference', 'temperature', 'humdity', 'mood', 'modeOfTransport',
+        #                    'eatRecentTwoHoursAgo', 'light', 'TVOC', 'cloth2', 'RMSSD'],
         #     show=False,
         #     plot_cmap=['#77dd77', '#f99191']
         # )
-
+        #
         # # Encode shap img into base64,
         # buf = BytesIO()
         # plt.savefig(buf, format='png', bbox_inches="tight", transparent=True)
