@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    server_name https://feedback-app-backend.web.app www.feedback-app-backend.web.app;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/root/backend/backend.sock;
+    }
+}
