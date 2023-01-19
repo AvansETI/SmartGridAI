@@ -13,6 +13,7 @@ export class PredictComponent implements OnInit {
   prediction?: any;
   loading: Boolean = false;
   explanation: Boolean = false;
+  error?: any;
 
   predictionForm: FormGroup = new FormGroup({
     thermalPreference: new FormControl(2, [Validators.required]),
@@ -43,18 +44,29 @@ export class PredictComponent implements OnInit {
     RMSSD: new FormControl(60, [Validators.required]),
   });
 
-  constructor(private predictService: PredictService) {}
+  constructor(private predictService: PredictService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   makePrediction(): void {
     this.loading = true;
+    console.log('test1')
     this.predictService
       .predict(this.predictionForm.value as PredictionInput)
-      .subscribe((res) => {
-        this.prediction = res as PredictionOutput;
-      });
-  }
+      .subscribe(
+        (result) => {
+          console.log("test")
+          this.prediction = result as PredictionOutput
+
+        },
+        error => {
+          this.loading = false;
+          this.error = error
+          console.log(error)
+        }
+      )
+  };
+
 
   resetOutput(): void {
     this.prediction = undefined;

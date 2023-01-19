@@ -1,134 +1,70 @@
 <div class="top-elipse h-full">
   <div class="container mx-auto py-10 px-10 h-full">
     <div class="pb-10">
-      <div
-        class="text-4xl font-bold flex justify-center items-center text-white"
-      >
+      <div class="text-4xl font-bold flex justify-center items-center text-white">
         Predict your personal comfort level
       </div>
     </div>
     <ng-container [ngSwitch]="true">
-      <ng-template
-        [ngSwitchCase]="prediction === undefined && explanation === false"
-      >
+      <ng-template [ngSwitchCase]="prediction === undefined && explanation === false">
         <div class="flex-auto px-4 lg:px-10 py-10 pt-6 bg-layover rounded-md">
-          <form
-            [formGroup]="predictionForm"
-            (submit)="makePrediction()"
-            class="text-gray-700"
-          >
+          <form [formGroup]="predictionForm" (submit)="makePrediction()" class="text-gray-700">
             <div class="grid grid-cols-2">
               <div class="mb-3 pr-2">
-                <label
-                  class="block uppercase text-xs font-bold mb-2"
-                  for="grid-password"
-                  >Thermal preference<span class="text-orange-400 ml-1">*</span
-                  ><app-tooltip
+                <label class="block uppercase text-xs font-bold mb-2" for="grid-password">Thermal preference<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip
                     description="Whether you would like it to be warmer, colder or for the temperature to stay the same."
-                    class="float-left"
-                  ></app-tooltip
-                ></label>
-                <select
-                  formControlName="thermalPreference"
-                  id="thermalPreference"
-                  name="thermalPreference"
+                    class="float-left"></app-tooltip></label>
+                <select formControlName="thermalPreference" id="thermalPreference" name="thermalPreference"
                   autocomplete="country-name"
-                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
-                >
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500">
                   <option value="1">Hotter</option>
                   <option value="2">Neutral</option>
                   <option value="3">Colder</option>
                 </select>
-                <app-error-display
-                  [control]="this.predictionForm.controls['thermalPreference']"
-                ></app-error-display>
+                <app-error-display [control]="this.predictionForm.controls['thermalPreference']"></app-error-display>
               </div>
               <div class="mb-3 pl-2">
-                <label
-                  class="block uppercase text-xs font-bold mb-2"
-                  for="temperature"
-                  >Temperature<span class="text-orange-400 ml-1">*</span
-                  ><app-tooltip
+                <label class="block uppercase text-xs font-bold mb-2" for="temperature">Temperature<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip
                     description="The temperature where you are right now in celcius."
-                    class="float-left"
-                  ></app-tooltip></label
-                ><input
-                  formControlName="temperature"
-                  min="0"
-                  max="100"
+                    class="float-left"></app-tooltip></label><input formControlName="temperature" min="0" max="100"
                   type="number"
                   class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
-                  placeholder="0-100"
-                  style="transition: all 0.15s ease 0s"
-                />
-                <app-error-display
-                  [control]="this.predictionForm.controls['temperature']"
-                ></app-error-display>
+                  placeholder="0-100" style="transition: all 0.15s ease 0s" />
+                <app-error-display [control]="this.predictionForm.controls['temperature']"></app-error-display>
               </div>
               <div class="mb-3 pr-2">
-                <label
-                  class="block uppercase text-xs font-bold mb-2"
-                  for="humidity"
-                  >Humidity<span class="text-orange-400 ml-1">*</span
-                  ><app-tooltip
-                    description="The relative humidity from 0-100."
-                    class="float-left"
-                  ></app-tooltip></label
-                ><input
-                  formControlName="humidity"
-                  min="0"
-                  max="100"
+                <label class="block uppercase text-xs font-bold mb-2" for="humidity">Humidity<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip description="The relative humidity from 0-100."
+                    class="float-left"></app-tooltip></label><input formControlName="humidity" min="0" max="100"
                   type="number"
                   class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
-                  placeholder="0-100"
-                  style="transition: all 0.15s ease 0s"
-                />
-                <app-error-display
-                  [control]="this.predictionForm.controls['humidity']"
-                ></app-error-display>
+                  placeholder="0-100" style="transition: all 0.15s ease 0s" />
+                <app-error-display [control]="this.predictionForm.controls['humidity']"></app-error-display>
               </div>
               <div class="mb-3 pl-2">
-                <label class="block uppercase text-xs font-bold mb-2" for="mood"
-                  >Mood<span class="text-orange-400 ml-1">*</span
-                  ><app-tooltip
-                    description="How you are feeling right now."
-                    class="float-left"
-                  ></app-tooltip
-                ></label>
-                <select
-                  formControlName="mood"
-                  id="mood"
-                  name="mood"
-                  autocomplete="mood"
-                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
-                >
+                <label class="block uppercase text-xs font-bold mb-2" for="mood">Mood<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip description="How you are feeling right now."
+                    class="float-left"></app-tooltip></label>
+                <select formControlName="mood" id="mood" name="mood" autocomplete="mood"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500">
                   <option value="1">Awful</option>
                   <option value="2">Bad</option>
                   <option value="3">Neutral</option>
                   <option value="4">Good</option>
                   <option value="5">Happy</option>
                 </select>
-                <app-error-display
-                  [control]="this.predictionForm.controls['thermalPreference']"
-                ></app-error-display>
+                <app-error-display [control]="this.predictionForm.controls['thermalPreference']"></app-error-display>
               </div>
               <div class="mb-3 pr-2">
-                <label
-                  class="block uppercase text-xs font-bold mb-2"
-                  for="modeOfTransport"
-                  >Mode of transport<span class="text-orange-400 ml-1">*</span
-                  ><app-tooltip
+                <label class="block uppercase text-xs font-bold mb-2" for="modeOfTransport">Mode of transport<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip
                     description="The mode of transport used to get to where you are right now."
-                    class="float-left"
-                  ></app-tooltip
-                ></label>
-                <select
-                  formControlName="modeOfTransport"
-                  id="modeOfTransport"
-                  name="modeOfTransport"
+                    class="float-left"></app-tooltip></label>
+                <select formControlName="modeOfTransport" id="modeOfTransport" name="modeOfTransport"
                   autocomplete="modeOfTransport"
-                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
-                >
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500">
                   <option value="1">Bike</option>
                   <option value="2">E-bike</option>
                   <option value="3">Scooter</option>
@@ -136,169 +72,97 @@
                   <option value="5">Public transport</option>
                   <option value="6">Walking</option>
                 </select>
-                <app-error-display
-                  [control]="this.predictionForm.controls['modeOfTransport']"
-                ></app-error-display>
+                <app-error-display [control]="this.predictionForm.controls['modeOfTransport']"></app-error-display>
               </div>
               <div class="mb-3 pl-2">
-                <label
-                  class="block uppercase text-xs font-bold mb-2"
-                  for="RMSSD"
-                  >RMSSD<span class="text-orange-400 ml-1">*</span
-                  ><app-tooltip
-                    description="An HRV metric split into three categories."
-                    class="float-left"
-                  ></app-tooltip
-                ></label>
-                <select
-                  formControlName="RMSSD"
-                  id="RMSSD"
-                  name="RMSSD"
-                  autocomplete="RMSSD"
-                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
-                >
+                <label class="block uppercase text-xs font-bold mb-2" for="RMSSD">RMSSD<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip
+                    description="An HRV metric split into three categories." class="float-left"></app-tooltip></label>
+                <select formControlName="RMSSD" id="RMSSD" name="RMSSD" autocomplete="RMSSD"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500">
                   <option value="30">Low</option>
                   <option value="60">Medium</option>
                   <option value="120">High</option>
                 </select>
-                <app-error-display
-                  [control]="this.predictionForm.controls['RMSSD']"
-                ></app-error-display>
+                <app-error-display [control]="this.predictionForm.controls['RMSSD']"></app-error-display>
               </div>
               <div class="mb-3 pr-2">
-                <label
-                  class="block uppercase text-xs font-bold mb-2"
-                  for="light"
-                  >Light<span class="text-orange-400 ml-1">*</span
-                  ><app-tooltip
-                    description="Light level in lux."
-                    class="float-left"
-                  ></app-tooltip
-                ></label>
-                <input
-                  formControlName="light"
-                  min="0"
-                  max="10000"
-                  type="number"
+                <label class="block uppercase text-xs font-bold mb-2" for="light">Light<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip description="Light level in lux."
+                    class="float-left"></app-tooltip></label>
+                <input formControlName="light" min="0" max="10000" type="number"
                   class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
-                  placeholder="0-10000"
-                  style="transition: all 0.15s ease 0s"
-                />
-                <app-error-display
-                  [control]="this.predictionForm.controls['light']"
-                ></app-error-display>
+                  placeholder="0-10000" style="transition: all 0.15s ease 0s" />
+                <app-error-display [control]="this.predictionForm.controls['light']"></app-error-display>
               </div>
               <div class="mb-3 pl-2">
-                <label class="block uppercase text-xs font-bold mb-2" for="TVOC"
-                  >TVOC<span class="text-orange-400 ml-1">*</span
-                  ><app-tooltip
+                <label class="block uppercase text-xs font-bold mb-2" for="TVOC">TVOC<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip
                     description="Total Volotile Organic Compound, the total amount of VOC's in the air."
-                    class="float-left"
-                  ></app-tooltip
-                ></label>
-                <input
-                  formControlName="TVOC"
-                  min="0"
-                  max="10000"
-                  type="number"
+                    class="float-left"></app-tooltip></label>
+                <input formControlName="TVOC" min="0" max="10000" type="number"
                   class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
-                  placeholder="0-10000"
-                  style="transition: all 0.15s ease 0s"
-                />
-                <app-error-display
-                  [control]="this.predictionForm.controls['TVOC']"
-                ></app-error-display>
+                  placeholder="0-10000" style="transition: all 0.15s ease 0s" />
+                <app-error-display [control]="this.predictionForm.controls['TVOC']"></app-error-display>
               </div>
               <div class="mb-3 pr-2">
-                <label
-                  class="block uppercase text-gray-700 text-xs font-bold mb-2"
-                  for="cloth2"
-                  >Shirt/blouse<span class="text-orange-400 ml-1"
-                    >*</span
-                  ></label
-                >
+                <label class="block uppercase text-gray-700 text-xs font-bold mb-2" for="cloth2">Shirt/blouse<span
+                    class="text-orange-400 ml-1">*</span></label>
                 <div class="flex items-start">
                   <div class="flex h-5 items-center">
-                    <input
-                      formControlName="cloth2"
-                      id="cloth2"
-                      name="cloth2"
-                      type="checkbox"
-                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
+                    <input formControlName="cloth2" id="cloth2" name="cloth2" type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                   </div>
                   <div class="ml-3 text-sm">
                     <p class="text-gray-500">
                       Whether you are wearing a shirt or blouse.
                     </p>
                   </div>
-                  <app-error-display
-                    [control]="this.predictionForm.controls['cloth2']"
-                  ></app-error-display>
+                  <app-error-display [control]="this.predictionForm.controls['cloth2']"></app-error-display>
                 </div>
               </div>
               <div class="mb-3 pl-2">
-                <label
-                  class="block uppercase text-gray-700 text-xs font-bold mb-2"
-                  for="eatRecentTwoHoursAgo"
-                  >Eaten recently<span class="text-orange-400 ml-1"
-                    >*</span
-                  ></label
-                >
+                <label class="block uppercase text-gray-700 text-xs font-bold mb-2" for="eatRecentTwoHoursAgo">Eaten
+                  recently<span class="text-orange-400 ml-1">*</span></label>
                 <div class="flex items-start">
                   <div class="flex h-5 items-center">
-                    <input
-                      formControlName="eatRecentTwoHoursAgo"
-                      id="eatRecentTwoHoursAgo"
-                      name="eatRecentTwoHoursAgo"
-                      type="checkbox"
-                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
+                    <input formControlName="eatRecentTwoHoursAgo" id="eatRecentTwoHoursAgo" name="eatRecentTwoHoursAgo"
+                      type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                   </div>
                   <div class="ml-3 text-sm">
                     <p class="text-gray-500">
                       Whether you have eaten more than 2 hours ago.
                     </p>
                   </div>
-                  <app-error-display
-                    [control]="this.predictionForm.controls['cloth2']"
-                  ></app-error-display>
+                  <app-error-display [control]="this.predictionForm.controls['cloth2']"></app-error-display>
                 </div>
               </div>
             </div>
-            <ng-container
-              *ngIf="
+            <ng-container *ngIf="
                 this.loading === false;
                 then initialState;
                 else showProcessing
-              "
-            ></ng-container>
+              "></ng-container>
             <div class="text-center mt-2">
               <ng-template #initialState>
                 <button
                   class="bg-primary_button text-white active:bg-primary_button disabled:bg-primary_button_disabled text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-                  type="submit"
-                  style="transition: all 0.15s ease 0s"
-                  [disabled]="this.predictionForm.invalid"
-                >
+                  type="submit" style="transition: all 0.15s ease 0s" [disabled]="this.predictionForm.invalid">
                   Predict
                 </button>
               </ng-template>
-              <ng-template #showProcessing
-                ><button
+              <ng-template #showProcessing><button
                   class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-                  type="submit"
-                  style="transition: all 0.15s ease 0s"
-                  [disabled]="true"
-                >
+                  type="submit" style="transition: all 0.15s ease 0s" [disabled]="true">
                   <div class="flex items-center justify-center center gap-2">
-                    <span
-                      class="h-6 w-6 block rounded-full border-4 border-t-cyan-400 animate-spin"
-                    ></span>
+                    <span class="h-6 w-6 block rounded-full border-4 border-t-cyan-400 animate-spin"></span>
                     Processing
                   </div>
-                </button></ng-template
-              >
+                </button></ng-template>
+              <div>
+                <p class="text-red-500" *ngIf="error?.name == 'HttpErrorResponse'">To make a prediction, go to site
+                  settings and allow Insecure content</p>
+              </div>
             </div>
           </form>
         </div>
@@ -335,18 +199,14 @@
               <div class="pr-1">
                 <button
                   class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-                  style="transition: all 0.15s ease 0s"
-                  (click)="showExplanation()"
-                >
+                  style="transition: all 0.15s ease 0s" (click)="showExplanation()">
                   How did i get this result?
                 </button>
               </div>
               <div class="pl-1">
                 <button
                   class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-                  style="transition: all 0.15s ease 0s"
-                  (click)="resetOutput()"
-                >
+                  style="transition: all 0.15s ease 0s" (click)="resetOutput()">
                   Make another prediction
                 </button>
               </div>
@@ -377,15 +237,11 @@
               </p>
             </div>
             <div class="pb-2">
-              <img
-                src="{{ 'data:image/jpg;base64,' + prediction?.['shap-img'] }}"
-              />
+              <img src="{{ 'data:image/jpg;base64,' + prediction?.['shap-img'] }}" />
             </div>
             <button
               class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-              style="transition: all 0.15s ease 0s"
-              (click)="hideExplanation()"
-            >
+              style="transition: all 0.15s ease 0s" (click)="hideExplanation()">
               Back to result
             </button>
           </div>
