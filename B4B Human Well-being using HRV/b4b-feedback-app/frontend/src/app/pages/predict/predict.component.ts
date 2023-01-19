@@ -50,19 +50,15 @@ export class PredictComponent implements OnInit {
 
   makePrediction(): void {
     this.loading = true;
-    console.log('test1')
     this.predictService
       .predict(this.predictionForm.value as PredictionInput)
       .subscribe(
         (result) => {
-          console.log("test")
           this.prediction = result as PredictionOutput
-
         },
         error => {
           this.loading = false;
           this.error = error
-          console.log(error)
         }
       )
   };
