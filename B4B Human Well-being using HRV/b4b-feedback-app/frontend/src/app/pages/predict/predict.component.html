@@ -80,15 +80,16 @@
                     description="An HRV metric split into three categories." class="float-left"></app-tooltip></label>
                 <select formControlName="RMSSD" id="RMSSD" name="RMSSD" autocomplete="RMSSD"
                   class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500">
-                  <option value="30">Low</option>
-                  <option value="60">Medium</option>
-                  <option value="120">High</option>
+                  <option value="30">Low - 30</option>
+                  <option value="60">Medium - 60</option>
+                  <option value="120">High - 120</option>
                 </select>
                 <app-error-display [control]="this.predictionForm.controls['RMSSD']"></app-error-display>
               </div>
               <div class="mb-3 pr-2">
                 <label class="block uppercase text-xs font-bold mb-2" for="light">Light<span
-                    class="text-orange-400 ml-1">*</span><app-tooltip description="Light level in lux."
+                    class="text-orange-400 ml-1">*</span><app-tooltip
+                    description="Light level in lux. A normal office has a light level of 400 - 500 lux."
                     class="float-left"></app-tooltip></label>
                 <input formControlName="light" min="0" max="10000" type="number"
                   class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
@@ -98,7 +99,7 @@
               <div class="mb-3 pl-2">
                 <label class="block uppercase text-xs font-bold mb-2" for="TVOC">TVOC<span
                     class="text-orange-400 ml-1">*</span><app-tooltip
-                    description="Total Volotile Organic Compound, the total amount of VOC's in the air."
+                    description="Total Volotile Organic Compound, the total amount of VOC's in the air. And how clean the air is. A good airquality is between 0 - 220, a moderate airquality is between 221 - 660 and high/bad airquality is above 660."
                     class="float-left"></app-tooltip></label>
                 <input formControlName="TVOC" min="0" max="10000" type="number"
                   class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
@@ -171,10 +172,21 @@
         <div class="flex-auto px-4 lg:px-10 pt-6 bg-layover rounded-md">
           <div class="mb-0 px-6 py-6">
             <div class="text-center mb-3">
-              <h6 class="text-gray-600 text-base font-bold">
-                You scored a {{ this.prediction?.thermalComfort }} on our
+              <h6 class="text-gray-600 text-base font-bold pb-2">
+                You scored a {{ this.prediction?.thermalComfort | number:'1.2-2' }} on our
                 prediction!
               </h6>
+              <div class="flex flex-col flex-grow place-content-center">
+                <div>
+                  <igx-linear-gauge #linearGauge height="80px" width="100%" minimumValue=1
+                    value={{this.prediction?.thermalComfort}} maximumValue=7 interval=1 isNeedleDraggingEnabled=false
+                    needleShape="Custom" needleBrush="DodgerBlue" needleOutline="DodgerBlue" needleStrokeThickness=1
+                    needleBreadth=15 needleInnerExtent=0.35 needleOuterExtent=0.65 needleOuterPointExtent=0.8
+                    needleInnerPointExtent=0.325 needleInnerPointWidth=0 needleOuterPointWidth=0.3
+                    needleInnerBaseWidth=0 needleOuterBaseWidth=0.07>
+                  </igx-linear-gauge>
+                </div>
+              </div>
             </div>
             <hr class="mt-6 border-b-1 border-gray-400" />
           </div>

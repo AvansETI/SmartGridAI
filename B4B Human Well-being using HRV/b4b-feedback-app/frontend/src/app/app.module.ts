@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FooterComponent } from './components/footer/footer.component';
+import { IgxLinearGaugeModule } from "igniteui-angular-gauges";
 
 @NgModule({
   declarations: [
@@ -32,8 +33,9 @@ import { FooterComponent } from './components/footer/footer.component';
     FontAwesomeModule,
     ReactiveFormsModule,
     HttpClientModule,
+    IgxLinearGaugeModule
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

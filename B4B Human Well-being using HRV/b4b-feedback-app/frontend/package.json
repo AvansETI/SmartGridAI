@@ -21,6 +21,8 @@
     "@fortawesome/angular-fontawesome": "^0.11.1",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "igniteui-angular-core": "^15.0.0",
+    "igniteui-angular-gauges": "^15.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
