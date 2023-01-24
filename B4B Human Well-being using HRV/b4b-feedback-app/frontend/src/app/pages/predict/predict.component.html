@@ -239,17 +239,14 @@
           <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
             <div class="pb-2">
               <p>
-                The graph that is shown displays how we got to your score. The
-                red areas in this graph represent the different inputs that
-                positivly impact your chance of passing the bar. The blue areas
-                in the graph represent the different inputs that negativly
-                impact your chance of passing the bar. The size of each bar in
-                this figure also represents how much each input weighs into the
+                The graph that is shown displays how we got to your score. The longer the bar in this graph is, the more
+                important the feature is. The size of each bar in
+                this figure represents how much each input weighs into the
                 prediction.
               </p>
             </div>
-            <div class="pb-2">
-              <img src="{{ 'data:image/jpg;base64,' + prediction?.['shap-img'] }}" />
+            <div class="pb-2 flex justify-center">
+              <img src="../../../assets/feature-importance.jpg" />
             </div>
             <button
               class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
