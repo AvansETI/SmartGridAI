@@ -1,0 +1,27 @@
+library brains4buildings.globals;
+
+bool page1 = true;
+bool page2 = false;
+bool page3 = false;
+String? unique_identification;
+String? username;
+int? mood = 0;
+int? modeOfTransport = 0;
+String? location = "LA001";
+String? durationInBuilding = "less than an hour";
+int? thermalComfort = 0;
+int? thermalPreference;
+bool suffocating = false;
+bool humid = false;
+bool stuffy = false;
+bool smelly = false;
+bool allGood = false;
+String? eatenRecently = "30 mins ago";
+int? beverage;
+bool cloth1 = false;
+bool cloth2 = false;
+bool cloth3 = false;
+bool cloth4 = false;
+bool cloth5 = false;
+bool cloth6 = false;
+bool cloth7 = false;

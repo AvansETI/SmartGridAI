@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  @apply bg-quarternary;
+}
+
+.top-elipse {
+  background: url("assets/Elipse.svg") no-repeat;
+  background-size: 100% auto;
+}
+
+.bottom-elipse {
+  background: url("assets/white-elipse.svg") no-repeat;
+}

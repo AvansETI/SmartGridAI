@@ -1,0 +1,261 @@
+<div class="top-elipse h-full">
+  <div class="container mx-auto py-10 px-10 h-full">
+    <div class="pb-10">
+      <div class="text-4xl font-bold flex justify-center items-center text-white">
+        Predict your personal comfort level
+      </div>
+    </div>
+    <ng-container [ngSwitch]="true">
+      <ng-template [ngSwitchCase]="prediction === undefined && explanation === false">
+        <div class="flex-auto px-4 lg:px-10 py-10 pt-6 bg-layover rounded-md">
+          <form [formGroup]="predictionForm" (submit)="makePrediction()" class="text-gray-700">
+            <div class="grid grid-cols-2">
+              <div class="mb-3 pr-2">
+                <label class="block uppercase text-xs font-bold mb-2" for="grid-password">Thermal preference<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip
+                    description="Whether you would like it to be warmer, colder or for the temperature to stay the same."
+                    class="float-left"></app-tooltip></label>
+                <select formControlName="thermalPreference" id="thermalPreference" name="thermalPreference"
+                  autocomplete="country-name"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500">
+                  <option value="1">Hotter</option>
+                  <option value="2">Neutral</option>
+                  <option value="3">Colder</option>
+                </select>
+                <app-error-display [control]="this.predictionForm.controls['thermalPreference']"></app-error-display>
+              </div>
+              <div class="mb-3 pl-2">
+                <label class="block uppercase text-xs font-bold mb-2" for="temperature">Temperature<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip
+                    description="The temperature where you are right now in celcius."
+                    class="float-left"></app-tooltip></label><input formControlName="temperature" min="0" max="100"
+                  type="number"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
+                  placeholder="0-100" style="transition: all 0.15s ease 0s" />
+                <app-error-display [control]="this.predictionForm.controls['temperature']"></app-error-display>
+              </div>
+              <div class="mb-3 pr-2">
+                <label class="block uppercase text-xs font-bold mb-2" for="humidity">Humidity<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip description="The relative humidity from 0-100."
+                    class="float-left"></app-tooltip></label><input formControlName="humidity" min="0" max="100"
+                  type="number"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
+                  placeholder="0-100" style="transition: all 0.15s ease 0s" />
+                <app-error-display [control]="this.predictionForm.controls['humidity']"></app-error-display>
+              </div>
+              <div class="mb-3 pl-2">
+                <label class="block uppercase text-xs font-bold mb-2" for="mood">Mood<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip description="How you are feeling right now."
+                    class="float-left"></app-tooltip></label>
+                <select formControlName="mood" id="mood" name="mood" autocomplete="mood"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500">
+                  <option value="1">Awful</option>
+                  <option value="2">Bad</option>
+                  <option value="3">Neutral</option>
+                  <option value="4">Good</option>
+                  <option value="5">Happy</option>
+                </select>
+                <app-error-display [control]="this.predictionForm.controls['thermalPreference']"></app-error-display>
+              </div>
+              <div class="mb-3 pr-2">
+                <label class="block uppercase text-xs font-bold mb-2" for="modeOfTransport">Mode of transport<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip
+                    description="The mode of transport used to get to where you are right now."
+                    class="float-left"></app-tooltip></label>
+                <select formControlName="modeOfTransport" id="modeOfTransport" name="modeOfTransport"
+                  autocomplete="modeOfTransport"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500">
+                  <option value="1">Bike</option>
+                  <option value="2">E-bike</option>
+                  <option value="3">Scooter</option>
+                  <option value="4">Car</option>
+                  <option value="5">Public transport</option>
+                  <option value="6">Walking</option>
+                </select>
+                <app-error-display [control]="this.predictionForm.controls['modeOfTransport']"></app-error-display>
+              </div>
+              <div class="mb-3 pl-2">
+                <label class="block uppercase text-xs font-bold mb-2" for="RMSSD">RMSSD<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip
+                    description="An HRV metric split into three categories." class="float-left"></app-tooltip></label>
+                <select formControlName="RMSSD" id="RMSSD" name="RMSSD" autocomplete="RMSSD"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500">
+                  <option value="30">Low - 30</option>
+                  <option value="60">Medium - 60</option>
+                  <option value="120">High - 120</option>
+                </select>
+                <app-error-display [control]="this.predictionForm.controls['RMSSD']"></app-error-display>
+              </div>
+              <div class="mb-3 pr-2">
+                <label class="block uppercase text-xs font-bold mb-2" for="light">Light<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip
+                    description="Light level in lux. A normal office has a light level of 400 - 500 lux."
+                    class="float-left"></app-tooltip></label>
+                <input formControlName="light" min="0" max="10000" type="number"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
+                  placeholder="0-10000" style="transition: all 0.15s ease 0s" />
+                <app-error-display [control]="this.predictionForm.controls['light']"></app-error-display>
+              </div>
+              <div class="mb-3 pl-2">
+                <label class="block uppercase text-xs font-bold mb-2" for="TVOC">TVOC<span
+                    class="text-orange-400 ml-1">*</span><app-tooltip
+                    description="Total Volotile Organic Compound, the total amount of VOC's in the air. And how clean the air is. A good airquality is between 0 - 220, a moderate airquality is between 221 - 660 and high/bad airquality is above 660."
+                    class="float-left"></app-tooltip></label>
+                <input formControlName="TVOC" min="0" max="10000" type="number"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full focus:invalid:ring-red-500"
+                  placeholder="0-10000" style="transition: all 0.15s ease 0s" />
+                <app-error-display [control]="this.predictionForm.controls['TVOC']"></app-error-display>
+              </div>
+              <div class="mb-3 pr-2">
+                <label class="block uppercase text-gray-700 text-xs font-bold mb-2" for="cloth2">Shirt/blouse<span
+                    class="text-orange-400 ml-1">*</span></label>
+                <div class="flex items-start">
+                  <div class="flex h-5 items-center">
+                    <input formControlName="cloth2" id="cloth2" name="cloth2" type="checkbox"
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                  </div>
+                  <div class="ml-3 text-sm">
+                    <p class="text-gray-500">
+                      Whether you are wearing a shirt or blouse.
+                    </p>
+                  </div>
+                  <app-error-display [control]="this.predictionForm.controls['cloth2']"></app-error-display>
+                </div>
+              </div>
+              <div class="mb-3 pl-2">
+                <label class="block uppercase text-gray-700 text-xs font-bold mb-2" for="eatRecentTwoHoursAgo">Eaten
+                  recently<span class="text-orange-400 ml-1">*</span></label>
+                <div class="flex items-start">
+                  <div class="flex h-5 items-center">
+                    <input formControlName="eatRecentTwoHoursAgo" id="eatRecentTwoHoursAgo" name="eatRecentTwoHoursAgo"
+                      type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                  </div>
+                  <div class="ml-3 text-sm">
+                    <p class="text-gray-500">
+                      Whether you have eaten more than 2 hours ago.
+                    </p>
+                  </div>
+                  <app-error-display [control]="this.predictionForm.controls['cloth2']"></app-error-display>
+                </div>
+              </div>
+            </div>
+            <ng-container *ngIf="
+                this.loading === false;
+                then initialState;
+                else showProcessing
+              "></ng-container>
+            <div class="text-center mt-2">
+              <ng-template #initialState>
+                <button
+                  class="bg-primary_button text-white active:bg-primary_button disabled:bg-primary_button_disabled text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
+                  type="submit" style="transition: all 0.15s ease 0s" [disabled]="this.predictionForm.invalid">
+                  Predict
+                </button>
+              </ng-template>
+              <ng-template #showProcessing><button
+                  class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
+                  type="submit" style="transition: all 0.15s ease 0s" [disabled]="true">
+                  <div class="flex items-center justify-center center gap-2">
+                    <span class="h-6 w-6 block rounded-full border-4 border-t-cyan-400 animate-spin"></span>
+                    Processing
+                  </div>
+                </button></ng-template>
+              <div>
+                <p class="text-red-500" *ngIf="error?.name == 'HttpErrorResponse'">To make a prediction, go to site
+                  settings and allow Insecure content</p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-template>
+      <ng-template [ngSwitchCase]="prediction && explanation === false">
+        <div class="flex-auto px-4 lg:px-10 pt-6 bg-layover rounded-md">
+          <div class="mb-0 px-6 py-6">
+            <div class="text-center mb-3">
+              <h6 class="text-gray-600 text-base font-bold pb-2">
+                You scored a {{ this.prediction?.thermalComfort | number:'1.2-2' }} on our
+                prediction!
+              </h6>
+              <div class="flex flex-col flex-grow place-content-center">
+                <div>
+                  <igx-linear-gauge #linearGauge height="80px" width="100%" minimumValue=1
+                    value={{this.prediction?.thermalComfort}} maximumValue=7 interval=1 isNeedleDraggingEnabled=false
+                    needleShape="Custom" needleBrush="DodgerBlue" needleOutline="DodgerBlue" needleStrokeThickness=1
+                    needleBreadth=15 needleInnerExtent=0.35 needleOuterExtent=0.65 needleOuterPointExtent=0.8
+                    needleInnerPointExtent=0.325 needleInnerPointWidth=0 needleOuterPointWidth=0.3
+                    needleInnerBaseWidth=0 needleOuterBaseWidth=0.07>
+                  </igx-linear-gauge>
+                </div>
+              </div>
+            </div>
+            <hr class="mt-6 border-b-1 border-gray-400" />
+          </div>
+          <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
+            <div class="pb-2">
+              <p>
+                You might be wondering how you should interpret your result. The
+                range of possible predictions is between 1-7. A score of 1 might
+                indicate that you are feeling quite hot. A score of 7 might
+                indicate that you might feel cold. The sweet spot is around a
+                score of 4. When you score a 4 we believe that you are feeling
+                comfortable.
+              </p>
+              <br />
+              <p>
+                If you are curious as to how we got to this prediction feel free
+                to click on the 'how did I get this result?' button, or make
+                another prediction.
+              </p>
+            </div>
+            <div class="text-center mt-6 grid grid-cols-2">
+              <div class="pr-1">
+                <button
+                  class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
+                  style="transition: all 0.15s ease 0s" (click)="showExplanation()">
+                  How did i get this result?
+                </button>
+              </div>
+              <div class="pl-1">
+                <button
+                  class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
+                  style="transition: all 0.15s ease 0s" (click)="resetOutput()">
+                  Make another prediction
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template ngSwitchDefault>
+        <div class="flex-auto px-4 lg:px-10 pt-6 bg-layover rounded-md">
+          <div class="rounded-t mb-0 px-6 py-6">
+            <div class="text-center mb-3">
+              <h6 class="text-gray-600 text-base font-bold">
+                How did I get this result?
+              </h6>
+            </div>
+            <hr class="mt-6 border-b-1 border-gray-400" />
+          </div>
+          <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
+            <div class="pb-2">
+              <p>
+                The graph that is shown displays how we got to your score. The longer the bar in this graph is, the more
+                important the feature is. The size of each bar in
+                this figure represents how much each input weighs into the
+                prediction.
+              </p>
+            </div>
+            <div class="pb-2 flex justify-center">
+              <img src="../../../assets/feature-importance.png" />
+            </div>
+            <button
+              class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
+              style="transition: all 0.15s ease 0s" (click)="hideExplanation()">
+              Back to result
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

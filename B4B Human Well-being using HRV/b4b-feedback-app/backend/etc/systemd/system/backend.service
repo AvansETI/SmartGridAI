@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve backend
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/root/backend
+Environment="PATH=/root/backend/tpot/bin"
+ExecStart=/root/backend/tpot/bin/gunicorn --workers 3 --bind unix:backend.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target
